@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><title>Flashcards DSA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&family=JetBrains+Mono&display=swap');
+* { box-sizing: border-box; }
+body { font-family: 'Sarabun', sans-serif; max-width: 960px; margin: 24px auto; padding: 0 24px; color: #1a2233; line-height: 1.55; }
+h1 { color: #0f2a5e; border-bottom: 3px solid #2f74c0; padding-bottom: 8px; }
+h2 { color: #0f2a5e; border-left: 5px solid #2f74c0; padding-left: 10px; margin-top: 28px; background: #f0f6ff; padding-top:4px; padding-bottom:4px;}
+h3 { color: #2f74c0; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.95em; }
+th { background: #2f74c0; color: #fff; padding: 8px; text-align: left; }
+td { border: 1px solid #cdd8e8; padding: 7px 8px; }
+tr:nth-child(even) td { background: #f5f9ff; }
+code { font-family: 'JetBrains Mono', monospace; background: #eef2f8; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+pre { background: #0f2a5e; color: #e8f0ff; padding: 14px; border-radius: 8px; overflow-x: auto; }
+pre code { background: none; color: inherit; padding: 0; }
+blockquote { border-left: 4px solid #f0a030; background: #fff8ec; margin: 12px 0; padding: 8px 14px; color: #5a4a2a; }
+strong { color: #0f2a5e; }
+hr { border: none; border-top: 1px dashed #b8c6de; margin: 22px 0; }
+@media print { body { margin: 0; max-width: none; } h2 { page-break-after: avoid; } table, pre { page-break-inside: avoid; } }
+</style>
+</head><body><h1>🃏 Flashcards ถาม-ตอบ — DSA (DII 2026)</h1>
+<blockquote>
+<p>วิธีใช้: ปิดส่วน <strong>A:</strong> แล้วลองตอบจากคำถามก่อน · ไฟล์ <code>flashcards-anki.csv</code> นำเข้า Anki ได้</p>
+</blockquote>
+<hr />
+<h2>หมวด 0 — ภาพรวม</h2>
+<p><strong>Q1:</strong> Data Structure คืออะไร?
+<strong>A:</strong> วิธีเก็บและจัดระเบียบข้อมูลให้เข้าถึงและแก้ไขได้ง่าย</p>
+<p><strong>Q2:</strong> Algorithm ที่ถูกต้องต้องมีคุณสมบัติอะไร 2 อย่าง?
+<strong>A:</strong> terminate ได้ (ไม่วนไม่จบ) + ให้ผลลัพธ์ถูกต้องสำหรับทุก input</p>
+<p><strong>Q3:</strong> ความต่างของ Linear กับ Non-Linear data structure?
+<strong>A:</strong> Linear เรียงเป็นเส้น (Array, List, Stack, Queue); Non-Linear เชื่อมหลายระดับ (Tree, Graph, Hash Table)</p>
+<p><strong>Q4:</strong> "กฎทอง" ของ data structure คืออะไร?
+<strong>A:</strong> No single data structure is perfect — ไม่มีอันที่ดีที่สุดทุกด้าน ต้องเลือกตามงาน</p>
+<p><strong>Q5:</strong> ฮาร์ดแวร์แรงแล้วทำไมยังต้องสน algorithm?
+<strong>A:</strong> ฮาร์ดแวร์คือพลังดิบ algorithm คือความฉลาดที่ทำให้พลังนั้นมีประโยชน์ — ฮาร์ดแวร์แรงรัน algorithm ห่วยก็ยังช้า</p>
+<hr />
+<h2>หมวด 1 — Stack &amp; Queue</h2>
+<p><strong>Q6:</strong> Stack ทำงานแบบใด? operation หลัก?
+<strong>A:</strong> LIFO (เข้าทีหลังออกก่อน); push, pop, peek, empty, size</p>
+<p><strong>Q7:</strong> Queue ทำงานแบบใด? operation หลัก?
+<strong>A:</strong> FIFO (เข้าก่อนออกก่อน); enQueue(insert), deQueue(remove), peek</p>
+<p><strong>Q8:</strong> Stack แบบ array เริ่มค่า top เท่าไร และ push ทำยังไง?
+<strong>A:</strong> top = -1; push คือ <code>top++</code> แล้ว <code>list[top] = x</code></p>
+<p><strong>Q9:</strong> ปัญหาของ Queue แบบ array ตอน deQueue คืออะไร แก้อย่างไร?
+<strong>A:</strong> ถ้าเลื่อนทุกตัวจะเปลือง → ใช้ Circular Array, index ถัดไป = <code>(rear+1) % SIZE</code></p>
+<p><strong>Q10:</strong> ยกตัวอย่างการประยุกต์ใช้ Stack
+<strong>A:</strong> ตรวจวงเล็บสมดุล, ท่องกราฟ, เก็บ nested method calls, คำนวณ expression</p>
+<hr />
+<h2>หมวด 2 — Linked List</h2>
+<p><strong>Q11:</strong> Node ในlinked list ประกอบด้วยอะไร?
+<strong>A:</strong> <code>element</code> (ข้อมูล) + pointer <code>next</code> (ชี้ node ถัดไป); ตัวสุดท้าย next = null</p>
+<p><strong>Q12:</strong> ข้อดีของ Linked List เหนือ Array?
+<strong>A:</strong> insert/delete เร็ว (แค่ขยับ pointer), ขนาดยืด/หดได้, จองหน่วยความจำตอน run (dynamic)</p>
+<p><strong>Q13:</strong> ข้อดีของ Array เหนือ Linked List?
+<strong>A:</strong> เข้าถึงแบบสุ่มด้วย index ได้ทันที O(1) (linked list ต้องไล่ทีละตัว)</p>
+<p><strong>Q14:</strong> โค้ด addFirst เขียนยังไง?
+<strong>A:</strong> <code>Node temp = new Node(x); temp.next = head; head = temp;</code></p>
+<p><strong>Q15:</strong> removeFirst ทำยังไง และ node เก่าเกิดอะไรขึ้น?
+<strong>A:</strong> <code>head = head.next;</code> node เก่ากลายเป็น garbage ให้ JVM เก็บ</p>
+<p><strong>Q16:</strong> Tailed / Circular / Doubly linked list ต่างกันยังไง?
+<strong>A:</strong> Tailed=เพิ่ม tail (addLast เร็ว); Circular=tail ชี้กลับ head (วนซ้ำ); Doubly=เพิ่ม prev (เดินถอยหลัง)</p>
+<p><strong>Q17:</strong> ทำไมต้องเขียน linked list เองทั้งที่มี API?
+<strong>A:</strong> เพื่อเข้าใจการทำงานและ complexity จะได้ใช้ API ได้อย่างถูกต้องและมีประสิทธิภาพ</p>
+<hr />
+<h2>หมวด 3 — ADT &amp; Generics</h2>
+<p><strong>Q18:</strong> ADT (Abstract Data Type) คืออะไร?
+<strong>A:</strong> ชนิดข้อมูลที่นิยามด้วยชุดค่า + ชุด operation โดยซ่อนวิธี implement (มองเป็น black box)</p>
+<p><strong>Q19:</strong> Generics <code>&lt;E&gt;</code> มีประโยชน์หลักอะไร?
+<strong>A:</strong> ทำให้ class เก็บได้ทุกชนิด + compiler ตรวจจับ type mismatch ได้ก่อนรัน</p>
+<p><strong>Q20:</strong> ข้อจำกัดของ Generics เรื่อง primitive?
+<strong>A:</strong> ใช้ primitive ตรงๆ ไม่ได้ ต้องใช้ wrapper เช่น <code>Integer</code> ไม่ใช่ <code>int</code></p>
+<hr />
+<h2>หมวด 4 — Big O / Efficiency</h2>
+<p><strong>Q21:</strong> ทำไมไม่วัดประสิทธิภาพด้วยเวลาจริง?
+<strong>A:</strong> เครื่องต่างกัน, รันแต่ละครั้งต่างกัน, algorithm เร็วๆ วัดไม่แม่น → นับ operation เทียบขนาด input แทน</p>
+<p><strong>Q22:</strong> กฎลัด Big O 2 ข้อหลัก?
+<strong>A:</strong> ค่าคงที่ไม่สำคัญ (O(2n)→O(n)) และพจน์เล็กไม่สำคัญ (O(n²+n)→O(n²))</p>
+<p><strong>Q23:</strong> loop ปกติ, nested loop, และ <code>i = i*2</code> ให้ Big O เท่าไร?
+<strong>A:</strong> O(n), O(n²), O(log n) ตามลำดับ</p>
+<p><strong>Q24:</strong> เรียงลำดับความเร็วจากดีสุดไปแย่สุด
+<strong>A:</strong> O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(n³) &lt; O(2ⁿ) &lt; O(n!)</p>
+<p><strong>Q25:</strong> <code>n*(n+1)/2</code> กับ loop รวม 1..n ให้ผลเท่ากัน Big O ต่างกันยังไง?
+<strong>A:</strong> สูตร = O(1), loop = O(n) → ผลถูกเท่ากันแต่ประสิทธิภาพต่างกัน</p>
+<p><strong>Q26:</strong> loop ที่ <code>i += 2</code> (เพิ่มทีละ 2) เป็น Big O อะไร?
+<strong>A:</strong> O(n) — เพราะ n/2 ครั้ง แต่ตัดค่าคงที่ทิ้ง</p>
+<hr />
+<h2>หมวด 5 — Recursion</h2>
+<p><strong>Q27:</strong> 3 องค์ประกอบของ recursion?
+<strong>A:</strong> Base case (เงื่อนไขหยุด), Recursive case (เรียกตัวเองด้วย input เล็กลง), Progress (ขยับเข้าใกล้ base case)</p>
+<p><strong>Q28:</strong> ไม่มี base case จะเกิดอะไรขึ้น?
+<strong>A:</strong> recursion วนไม่จบ → stack overflow</p>
+<p><strong>Q29:</strong> Fibonacci แบบ recursion ธรรมดามี Big O เท่าไร และทำไม?
+<strong>A:</strong> O(2ⁿ) เพราะคำนวณค่าเดิมซ้ำหลายครั้ง</p>
+<p><strong>Q30:</strong> factorial(n) มี Big O เท่าไร?
+<strong>A:</strong> O(n)</p>
+<hr />
+<h2>หมวด 6 — Tower of Hanoi</h2>
+<p><strong>Q31:</strong> กติกา 3 ข้อของ Tower of Hanoi?
+<strong>A:</strong> ย้ายทีละแผ่น, ย้ายเฉพาะแผ่นบนสุด, ห้ามวางแผ่นใหญ่ทับแผ่นเล็ก</p>
+<p><strong>Q32:</strong> insight การย้าย N แผ่นจาก A→C (3 ขั้น)?
+<strong>A:</strong> 1) ย้าย N−1 แผ่น A→B 2) ย้ายแผ่นใหญ่สุด A→C 3) ย้าย N−1 แผ่น B→C</p>
+<p><strong>Q33:</strong> N แผ่นใช้กี่ครั้ง และ Big O เท่าไร?
+<strong>A:</strong> 2ᴺ − 1 ครั้ง → O(2ⁿ)</p>
+<p><strong>Q34:</strong> เขียน Tower of Hanoi แบบ iterative ดีกว่า recursion ไหม?
+<strong>A:</strong> ไม่เร็วขึ้น — แค่โค้ดยาวและอ่านยากกว่า; เลือกเครื่องมือให้ตรงกับปัญหา</p>
+<hr />
+<h2>หมวด 7 — Dynamic Programming</h2>
+<p><strong>Q35:</strong> ประโยคสรุป DP สั้นๆ?
+<strong>A:</strong> "DP = Recursion + Memory" / "Solve once. Store. Reuse."</p>
+<p><strong>Q36:</strong> ควรใช้ DP เมื่อไร?
+<strong>A:</strong> เมื่อมี subproblem ซ้ำ + สร้างคำตอบจากคำตอบย่อยได้ + recursion ถูกแต่ช้า</p>
+<p><strong>Q37:</strong> Top-Down (Memoization) ต่างจาก Bottom-Up (Tabulation) ยังไง?
+<strong>A:</strong> Top-Down=recursion + cache; Bottom-Up=เริ่มเล็กสุดไล่สร้างขึ้นด้วย loop</p>
+<p><strong>Q38:</strong> Fibonacci recursion vs DP ลด Big O จากเท่าไรเป็นเท่าไร?
+<strong>A:</strong> จาก O(2ⁿ) เหลือ O(n)</p>
+<p><strong>Q39:</strong> Coin Change recurrence เขียนยังไง?
+<strong>A:</strong> <code>dp[a] = min(dp[a], dp[a-coin] + 1)</code>, base case dp[0]=0; Big O = O(amount × coins)</p>
+<p><strong>Q40:</strong> 0/1 Knapsack: dp[i][c] หมายถึงอะไร และ recurrence?
+<strong>A:</strong> ค่ามากสุดจาก i ชิ้นแรก ความจุ c; <code>dp[i][c]=max(skip=dp[i-1][c], take=value+dp[i-1][c-weight])</code>; Big O=O(items×capacity)</p>
+<p><strong>Q41:</strong> 7 ขั้นตอนแก้ปัญหา DP?
+<strong>A:</strong> subproblem → state → base case → recurrence → เลือก top-down/bottom-up → เติม table → คืนคำตอบ</p>
+<hr />
+<h2>หมวด 7.5 — รายละเอียดที่ข้อสอบชอบออก</h2>
+<p><strong>Q42b:</strong> นิยามทางการของ Big O เขียนยังไง?
+<strong>A:</strong> มี c, n₀ ที่ทำให้ <code>0 ≤ f(n) ≤ c·g(n)</code> สำหรับทุก n ≥ n₀ (ขอบบน)</p>
+<p><strong>Q42c:</strong> Θ ต่างจาก O และ Ω อย่างไร?
+<strong>A:</strong> O=ขอบบน (≤c·g), Ω=ขอบล่าง (≥c·g), Θ=ทั้งบนและล่าง ใช้ 2 ค่าคงที่ <code>c₁·g ≤ f ≤ c₂·g</code></p>
+<p><strong>Q42d:</strong> พิสูจน์ว่า f(n)=4n+2 เป็น O(n) ยังไง?
+<strong>A:</strong> ให้ c=6 → <code>0 ≤ 4n+2 ≤ 6n</code> จริงตั้งแต่ n=1 → เป็น O(n)</p>
+<p><strong>Q42e:</strong> ใน Java <code>new Integer(20) == new Integer(20)</code> ได้ผลอะไร ทำไม?
+<strong>A:</strong> false — เพราะ <code>==</code> เทียบ reference (ที่อยู่) ไม่ใช่ค่า, new สร้าง object คนละตัว; เทียบค่าต้องใช้ .equals()</p>
+<p><strong>Q42f:</strong> primitive type กับ reference type เก็บอะไรต่างกัน?
+<strong>A:</strong> primitive (int) เก็บค่าจริง; reference (Integer/String/object) เก็บที่อยู่ของ object</p>
+<p><strong>Q42g:</strong> ตรวจวงเล็บสมดุลด้วย stack ทำยังไง?
+<strong>A:</strong> เจอ ( → push, เจอ ) → pop; จบแล้ว stack ว่าง=สมดุล, ถ้า pop ตอนว่างหรือจบแล้วไม่ว่าง=ไม่สมดุล</p>
+<p><strong>Q42h:</strong> ทำไม recursion ที่เรียกตัวเอง 2 ครั้งเป็น O(2ⁿ)?
+<strong>A:</strong> สร้าง binary tree ที่แต่ละชั้นมี node เป็น 2 เท่า (ชั้น k มี 2ᵏ node) รวม ≈ 2ⁿ</p>
+<p><strong>Q42i:</strong> วิชานี้ Part 2 มีหัวข้ออะไรที่ยังไม่อยู่ในสไลด์ชุดนี้?
+<strong>A:</strong> Searching &amp; Sorting, Tree, Graph, Hash table (โดย อ.Pop)</p>
+<hr />
+<h2>หมวด 8 — วิธีคิดหลัก</h2>
+<p><strong>Q42:</strong> 6 วิธีคิดหลักของวิชานี้?
+<strong>A:</strong> 1) Trade-off เสมอ 2) เขียนเองก่อนใช้ API 3) ถูกต้อง≠มีประสิทธิภาพ 4) คิดเป็น input ขนาด n 5) คิด edge case 6) ปัญหาใหญ่=ปัญหาย่อยซ้ำกัน</p></body></html>

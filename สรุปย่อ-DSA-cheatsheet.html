@@ -1,0 +1,265 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><title>Cheat Sheet DSA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&family=JetBrains+Mono&display=swap');
+* { box-sizing: border-box; }
+body { font-family: 'Sarabun', sans-serif; max-width: 960px; margin: 24px auto; padding: 0 24px; color: #1a2233; line-height: 1.55; }
+h1 { color: #0f2a5e; border-bottom: 3px solid #2f74c0; padding-bottom: 8px; }
+h2 { color: #0f2a5e; border-left: 5px solid #2f74c0; padding-left: 10px; margin-top: 28px; background: #f0f6ff; padding-top:4px; padding-bottom:4px;}
+h3 { color: #2f74c0; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.95em; }
+th { background: #2f74c0; color: #fff; padding: 8px; text-align: left; }
+td { border: 1px solid #cdd8e8; padding: 7px 8px; }
+tr:nth-child(even) td { background: #f5f9ff; }
+code { font-family: 'JetBrains Mono', monospace; background: #eef2f8; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+pre { background: #0f2a5e; color: #e8f0ff; padding: 14px; border-radius: 8px; overflow-x: auto; }
+pre code { background: none; color: inherit; padding: 0; }
+blockquote { border-left: 4px solid #f0a030; background: #fff8ec; margin: 12px 0; padding: 8px 14px; color: #5a4a2a; }
+strong { color: #0f2a5e; }
+hr { border: none; border-top: 1px dashed #b8c6de; margin: 22px 0; }
+@media print { body { margin: 0; max-width: none; } h2 { page-break-after: avoid; } table, pre { page-break-inside: avoid; } }
+</style>
+</head><body><h1>📘 Cheat Sheet — Data Structures &amp; Algorithms (DII 2026)</h1>
+<blockquote>
+<p>อ.Suttinee · อ้างอิง <em>Introduction to Algorithms (CLRS) 3rd ed.</em> · อ่านก่อนสอบ</p>
+</blockquote>
+<hr />
+<h2>0. ภาพรวม &amp; แนวคิดราก</h2>
+<ul>
+<li><strong>Data Structure</strong> = วิธีเก็บ/จัดระเบียบข้อมูลให้เข้าถึงและแก้ไขง่าย</li>
+<li><strong>Algorithm</strong> = ลำดับขั้นตอนแปลง Input → Output ต้อง <strong>terminate ได้ + ถูกต้องทุก input</strong></li>
+<li><strong>Linear</strong> (เรียงเป็นเส้น): Array, List, Stack, Queue</li>
+<li><strong>Non-Linear</strong> (เชื่อมหลายระดับ): Tree, Graph, Hash Table</li>
+<li>🔑 <strong>กฎทอง: "No single data structure is perfect"</strong> — เลือกตามงานเสมอ</li>
+<li>🔑 ฮาร์ดแวร์ = พลังดิบ / algorithm = ความฉลาด → ฮาร์ดแวร์แรง + algorithm ห่วย = ยังช้า</li>
+</ul>
+<hr />
+<h2>1. Stack &amp; Queue</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Stack</strong></th>
+<th><strong>Queue</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>หลักการ</td>
+<td><strong>LIFO</strong> (เข้าทีหลังออกก่อน)</td>
+<td><strong>FIFO</strong> (เข้าก่อนออกก่อน)</td>
+</tr>
+<tr>
+<td>operation</td>
+<td>push / pop / peek / empty / size</td>
+<td>enQueue(insert) / deQueue(remove) / peek</td>
+</tr>
+<tr>
+<td>ตัวชี้</td>
+<td><code>top</code></td>
+<td><code>front</code> + <code>rear</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Stack (array):</strong> เริ่ม <code>top = -1</code>
+- push → <code>top++; list[top] = x;</code>
+- pop → <code>x = list[top]; top--; return x;</code></p>
+<p><strong>Queue ปัญหา:</strong> เลื่อนทุกตัวตอน deQueue เปลือง → ใช้ <strong>Circular Array</strong>
+- index ถัดไป = <code>(rear + 1) % SIZE</code></p>
+<p><strong>ประยุกต์ Stack:</strong> ตรวจวงเล็บสมดุล, ท่องกราฟ, เก็บ nested method calls, คำนวณ expression</p>
+<p>⚠️ Edge case ที่ต้องคิด: pop ตอนว่าง? push ตอนเต็ม? ดู top ยังไง?</p>
+<hr />
+<h2>2. Linked List</h2>
+<p>แต่ละข้อมูลอยู่ใน <strong>node</strong> = <code>element</code> + pointer <code>next</code>; node สุดท้าย <code>next = null</code></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Array</strong></th>
+<th><strong>Linked List</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>เข้าถึง</td>
+<td>สุ่มด้วย index (เร็ว O(1))</td>
+<td>ไล่ทีละตัว (O(n))</td>
+</tr>
+<tr>
+<td>memory</td>
+<td>ติดกัน, จองตอน compile (static)</td>
+<td>กระจาย, จองตอน run (dynamic)</td>
+</tr>
+<tr>
+<td>insert/delete</td>
+<td>ช้า (ต้องเลื่อน)</td>
+<td><strong>เร็ว — ขยับ pointer</strong></td>
+</tr>
+<tr>
+<td>ขนาด</td>
+<td>ตายตัว</td>
+<td>ยืด/หดได้</td>
+</tr>
+</tbody>
+</table>
+<p><strong>โค้ดหัวใจ:</strong></p>
+<pre><code class="language-java">// addFirst
+Node temp = new Node(x);
+temp.next = head;
+head = temp;
+
+// removeFirst  → node เก่ากลายเป็น garbage
+head = head.next;
+
+// ท่อง list
+Node current = head;
+while (current != null) {
+    System.out.print(current.element + &quot; &quot;);
+    current = current.next;
+}
+
+// getLast → วนจนกระทั่ง current.next == null
+</code></pre>
+<p><strong>ชนิดพัฒนาขึ้น:</strong>
+- <strong>Tailed</strong> = เพิ่ม <code>tail</code> → addLast เร็ว
+- <strong>Circular</strong> = tail ชี้กลับ head → วนซ้ำได้
+- <strong>Doubly</strong> = เพิ่ม <code>prev</code> → เดินถอยหลังได้ (ใช้ DNode)
+- ⚠️ ยิ่งเพิ่ม pointer ยิ่งต้อง maintain มากขึ้น</p>
+<blockquote>
+<p>ทำไมเขียนเองทั้งที่มี API? → เพื่อเข้าใจการทำงาน + complexity จะได้ใช้ API ถูก</p>
+</blockquote>
+<hr />
+<h2>3. ADT &amp; Generics</h2>
+<ul>
+<li><strong>ADT</strong> = ชนิดข้อมูลที่นิยามด้วย "ชุดค่า + ชุด operation" และ <strong>ซ่อนวิธี implement</strong> (black box)</li>
+<li><strong>Generics <code>&lt;E&gt;</code></strong> = class เก็บได้ทุกชนิด ไม่จำกัด int</li>
+<li><code>Vector&lt;Integer&gt;</code>, <code>Vector&lt;String&gt;</code></li>
+<li>✅ ประโยชน์: compiler ตรวจ type mismatch <strong>ก่อน</strong> รัน</li>
+<li>⚠️ ใช้ primitive ตรงๆ ไม่ได้ ต้อง wrapper (<code>Integer</code> ไม่ใช่ <code>int</code>)</li>
+<li><strong>ADT พร้อมใช้ใน Java</strong> (<code>java.util</code>): <code>List</code> (ArrayList), <code>Stack</code>, <code>Queue</code> (LinkedList / ArrayDeque / PriorityQueue)</li>
+</ul>
+<hr />
+<h2>4. Efficiency — Big O ⭐ (สำคัญสุด)</h2>
+<p><strong>ทำไมไม่จับเวลาจริง?</strong> เครื่องต่างกัน / รันแต่ละครั้งต่างกัน / เร็วๆ วัดไม่แม่น → นับ <strong>operation เทียบขนาด input (n)</strong></p>
+<p><strong>Notation:</strong> Θ (บน+ล่าง) · Ω (ล่าง) · <strong>O (บน, ใช้บ่อยสุด)</strong></p>
+<p><strong>กฎลัด:</strong>
+- คงที่ไม่สำคัญ: O(2n)→O(n), O(500)→O(1)
+- พจน์เล็กไม่สำคัญ: O(n²+n+5)→O(n²)
+- arithmetic / assignment / เข้าถึง array = O(1)
+- <strong>loop = ความยาว loop × งานข้างใน</strong></p>
+<p><strong>ตัวอย่างวิเคราะห์:</strong>
+| โค้ด | จำนวน op | Big O |
+|---|---|---|
+| <code>return n*(n+1)/2;</code> | 3 (คงที่) | <strong>O(1)</strong> |
+| loop รวม 1..n | 4n+2 | <strong>O(n)</strong> |
+| <code>Math.min(n,5)</code> ใน loop | ≤5 | <strong>O(1)</strong> |
+| nested loop <code>j&lt;n</code> | n² | <strong>O(n²)</strong> |
+| <code>i = i*2</code> | log₂n+1 | <strong>O(log n)</strong> |
+| <code>i += 2</code> | n/2 | <strong>O(n)</strong> |
+| nested <code>j&lt;=i</code> → 1+2+…+n = n(n+1)/2 | | <strong>O(n²)</strong> |</p>
+<p><strong>ลำดับเร็ว→ช้า:</strong>
+<code>O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(n³) &lt; O(2ⁿ) &lt; O(n!)</code></p>
+<p>🔑 ผลลัพธ์เท่ากัน ≠ ประสิทธิภาพเท่ากัน (<code>loop</code> vs <code>สูตร</code>)</p>
+<hr />
+<h2>5. Recursion</h2>
+<p><strong>3 องค์ประกอบขาดไม่ได้:</strong>
+1. <strong>Base Case</strong> — เงื่อนไขหยุด (ไม่มี = stack overflow)
+2. <strong>Recursive Case</strong> — เรียกตัวเองด้วย input เล็กลง
+3. <strong>Progress</strong> — ขยับเข้าใกล้ base case ทุกครั้ง</p>
+<p><strong>ตัวอย่าง + Big O:</strong>
+| method | สูตร | Big O |
+|---|---|---|
+| <code>factorial(n)</code> | <code>n * factorial(n-1)</code> | O(n) |
+| <code>sum(start,end)</code> | <code>end + sum(start, end-1)</code> | O(n) |
+| <code>fib(n)</code> | <code>fib(n-1)+fib(n-2)</code> | <strong>O(2ⁿ)</strong> ช้า! |
+| <code>nFactorial</code> (loop+recursion) | | <strong>O(n!)</strong> |</p>
+<p>🔑 อ่าน call stack: "บนลงล่าง เริ่ม main ก่อน" → ลงไปจนถึง base case แล้วคลายค่ากลับ (unrolling)</p>
+<hr />
+<h2>6. Tower of Hanoi (เคสศึกษา recursion)</h2>
+<p><strong>กติกา:</strong> ย้ายทีละแผ่น · เฉพาะแผ่นบนสุด · ห้ามแผ่นใหญ่ทับแผ่นเล็ก</p>
+<p><strong>Insight (ย้าย N แผ่น A→C):</strong>
+1. ย้าย N−1 แผ่น A→B (ใช้ C ช่วย)
+2. ย้ายแผ่นใหญ่สุด A→C
+3. ย้าย N−1 แผ่น B→C (ใช้ A ช่วย)</p>
+<pre><code class="language-java">void solve(int n, char from, char temp, char to) {
+    if (n == 1) { print(from + &quot; → &quot; + to); return; }
+    solve(n-1, from, to, temp);
+    print(from + &quot; → &quot; + to);
+    solve(n-1, temp, from, to);
+}
+</code></pre>
+<ul>
+<li>จำนวนการย้าย = <strong>2ᴺ − 1</strong> → <strong>O(2ⁿ)</strong></li>
+<li>บทเรียน: โค้ดสวย ≠ เร็ว · iterative ไม่ได้เร็วขึ้น แค่ยาว/อ่านยาก · เลือกเครื่องมือให้ตรงกับปัญหา</li>
+</ul>
+<hr />
+<h2>7. Dynamic Programming (DP)</h2>
+<p>🔑 <strong>"DP = Recursion + Memory" · "Solve once. Store. Reuse."</strong>
+ใช้เมื่อ: มี subproblem ซ้ำ + สร้างคำตอบจากคำตอบย่อยได้ + recursion ถูกแต่ช้า</p>
+<p><strong>2 แนวทาง:</strong>
+- <strong>Top-Down (Memoization)</strong> — recursion + cache <code>memo[]</code>, เคยทำแล้วคืนทันที
+- <strong>Bottom-Up (Tabulation)</strong> — เริ่มเล็กสุด ไล่สร้างด้วย loop <code>dp[0]…dp[n]</code></p>
+<p><strong>3 ปัญหาคลาสสิก:</strong>
+| ปัญหา | State | recurrence | Recursive | DP |
+|---|---|---|---|---|
+| Fibonacci | <code>dp[i]</code> | <code>dp[i]=dp[i-1]+dp[i-2]</code> | O(2ⁿ) | <strong>O(n)</strong> |
+| Coin Change | <code>dp[a]</code>=เหรียญน้อยสุดยอด a | <code>dp[a]=min(dp[a], dp[a-coin]+1)</code> | exp | <strong>O(amount×coins)</strong> |
+| 0/1 Knapsack | <code>dp[i][c]</code>=ค่ามากสุด i ชิ้นแรก จุ c | <code>max(skip=dp[i-1][c], take=val+dp[i-1][c-w])</code> | O(2ⁿ) | <strong>O(items×cap)</strong> |</p>
+<p><strong>ขั้นตอนแก้ DP (7):</strong> subproblem → state → base case → recurrence → top-down/bottom-up → เติม table → คืนคำตอบ</p>
+<blockquote>
+<p>Knapsack: แต่ละชิ้นเลือก take/skip · row 0 = 0 ทั้งหมด · ถ้าน้ำหนัก &gt; ความจุ → copy แถวบน</p>
+</blockquote>
+<hr />
+<h2>8. 🎯 รายละเอียดที่ข้อสอบชอบออก (เพิ่มเติม)</h2>
+<h3>8.1 นิยามทางการของ Asymptotic Notation (Lesson 6)</h3>
+<p>ทั้งสามนิยามด้วยการหา <strong>ค่าคงที่ c และ n₀</strong> ให้เงื่อนไขจริงสำหรับ n ≥ n₀:
+- <strong>O (Big O — ขอบบน):</strong> <code>0 ≤ f(n) ≤ c·g(n)</code> → "เร็วสุดไม่เกินนี้"
+- <strong>Ω (Big Omega — ขอบล่าง):</strong> <code>0 ≤ c·g(n) ≤ f(n)</code> → "ช้าสุดอย่างน้อยเท่านี้"
+- <strong>Θ (Big Theta — ขอบบน+ล่าง):</strong> <code>0 ≤ c₁·g(n) ≤ f(n) ≤ c₂·g(n)</code> (ใช้ 2 ค่าคงที่)</p>
+<p><strong>ตัวอย่างพิสูจน์ Big O:</strong>
+- <code>f(n) = 3</code> → O(1): ให้ c=3 → <code>0 ≤ 3 ≤ 3·1</code> ✓
+- <code>f(n) = 4n+2</code> → O(n): ให้ c=6 → <code>0 ≤ 4n+2 ≤ 6n</code> (จริงตั้งแต่ n=1) ✓</p>
+<h3>8.2 Object References ใน Java (Lesson 3) — กับดักคลาสสิก ⚠️</h3>
+<p><code>==</code> เปรียบเทียบ <strong>reference (ที่อยู่)</strong> ไม่ใช่ค่า</p>
+<pre><code class="language-java">Integer y = new Integer(20);
+Integer w = new Integer(20);
+if (w == y) ...   // FALSE — คนละ object คนละที่อยู่
+w = y;            // ชี้ไป object เดียวกัน
+if (w == y) ...   // TRUE
+</code></pre>
+<ul>
+<li>primitive (<code>int x = 3</code>) เก็บ <strong>ค่าจริง</strong> / reference type (<code>Integer</code>, <code>String</code>, object) เก็บ <strong>ที่อยู่</strong></li>
+<li><code>new</code> = สร้าง object ใหม่เสมอ → ได้ที่อยู่ใหม่</li>
+<li>เทียบ "ค่า" ต้องใช้ <code>.equals()</code> ไม่ใช่ <code>==</code></li>
+</ul>
+<h3>8.3 อัลกอริทึมตรวจวงเล็บสมดุลด้วย Stack (Lesson 2)</h3>
+<p>ไล่อ่านทีละตัว: เจอ <code>(</code> → <strong>push</strong> / เจอ <code>)</code> → <strong>pop</strong>
+- ปลายทาง stack ว่าง = สมดุล ✓ · ถ้า pop ตอน stack ว่าง หรือจบแล้ว stack ไม่ว่าง = ไม่สมดุล ✗
+- เช่น <code>((A*2))+(3+4)+(C+F))</code> ไม่สมดุล (วงเล็บปิดเกิน)</p>
+<h3>8.4 ทำไม recursion 2 กิ่ง = O(2ⁿ) (Binary Tree, Lesson 7)</h3>
+<p>recursion ที่เรียกตัวเอง 2 ครั้ง (เช่น fib) สร้าง tree ที่ <strong>แต่ละชั้นมี node เป็น 2 เท่า</strong>: ชั้น k มี 2ᵏ node → รวม ≈ 2ⁿ
+- Fibonacci tree มี node ซ้ำ (red) เยอะ → ที่มาของการใช้ DP มาช่วย
+- <code>nFactorial</code> (loop n รอบ × เรียกตัวเอง) → จำนวนครั้ง = n×(n-1)×… → <strong>O(n!)</strong></p>
+<h3>8.5 ขอบเขตวิชาเต็ม — สไลด์ชุดนี้ = Part 1 เท่านั้น</h3>
+<p><strong>ยังไม่มีในไฟล์ (Part 2 โดย อ.Pop):</strong> Searching &amp; Sorting algorithms · Tree · Graph · Hash table</p>
+<blockquote>
+<p>เตรียมไว้ว่าข้อสอบ/บทเรียนถัดไปจะมีหัวข้อพวกนี้เพิ่ม</p>
+</blockquote>
+<h3>8.6 โจทย์/การบ้านที่แทรกในสไลด์ (มักออกสอบ)</h3>
+<ul>
+<li>ปรับ Stack: จัดการ pop ตอนว่าง / push ตอนเต็ม / อ่านค่า top</li>
+<li>เขียน method ลบข้อมูลจาก array โดยไม่เหลือช่องว่างตรงกลาง</li>
+<li>เขียน method คัดลอก array หนึ่งไปอีก array</li>
+<li>วาดกราฟ complexity เทียบ n</li>
+<li>LinkedList: removeFirst, printAll (ทั้ง loop และ recursion), getSize, getLast</li>
+<li>เติมตาราง DP: coins=[1,2,5] amount=7 → คำตอบ dp = [0,1,1,2,2,1,2,2], ขั้นต่ำ 2 เหรียญ (5+2)</li>
+</ul>
+<hr />
+<h2>✅ 6 วิธีคิดหลักของวิชา</h2>
+<ol>
+<li><strong>Trade-off เสมอ</strong> — ไม่มีอันที่ดีสุดทุกด้าน</li>
+<li><strong>เขียนเองก่อนใช้ API</strong> — เข้าใจลึก</li>
+<li><strong>ถูกต้อง ≠ มีประสิทธิภาพ</strong> — วัดด้วย Big O</li>
+<li><strong>คิดเป็น input ขนาด n</strong> — operation โตตาม n อย่างไร</li>
+<li><strong>คิด edge case</strong> — ว่าง/เต็ม/เกินขอบ</li>
+<li><strong>ปัญหาใหญ่ = ปัญหาย่อยที่ซ้ำกัน</strong> — รากของ Recursion + DP</li>
+</ol></body></html>

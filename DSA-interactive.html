@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DSA Interactive — เรียน Data Structures & Algorithms (DII 2026)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --navy:#0f2a5e; --blue:#2f74c0; --cyan:#19b6d8; --cyan2:#13d4f0;
+  --bg:#f4f7fb; --card:#ffffff; --ink:#1a2233; --muted:#5a6b85;
+  --line:#d8e2f0; --code-bg:#0f1d3a; --ok:#1f9d57; --warn:#e8842b; --bad:#d6453d;
+  --shadow:0 6px 24px rgba(15,42,94,.08);
+}
+body.dark{
+  --bg:#0d1320; --card:#161f33; --ink:#dce6f5; --muted:#9fb0c9;
+  --line:#2a3650; --navy:#bcd4ff; --blue:#4f9ae0; --code-bg:#0a1426;
+  --shadow:0 6px 24px rgba(0,0,0,.45);
+}
+/* dark overrides for hardcoded light spots */
+body.dark #side,body.dark .quiz{background:var(--card)}
+body.dark #side a:hover{background:#1b2740}
+body.dark td{background:var(--card)}
+body.dark tr:nth-child(even) td{background:#1b2740}
+body.dark code{background:#1b2740;color:#9fd0ff}
+body.dark .demo{background:linear-gradient(180deg,#161f33,#121a2b)}
+body.dark .demo .stage,body.dark canvas,body.dark .play textarea{background:#0f1626}
+body.dark .demo input{background:#0f1626;color:var(--ink)}
+body.dark .play textarea{color:#dce6f5}
+body.dark .play .phead{background:#1b2740}
+body.dark .play .prun{background:#141d30}
+body.dark .cell,body.dark .frame{background:#1d2c47;color:#cfe0fa}
+body.dark .cell.empty{background:#131b2c}
+body.dark .frame.done{background:#16341f}
+body.dark .frame.active{background:#3a2c10}
+body.dark .dpgrid .c{background:#0f1626;color:#cfe0fa;border-color:var(--line)}
+body.dark .dpgrid .c.fill{background:#1d2c47}
+body.dark .node .nx{background:#22324f;color:#cfe0fa}
+body.dark .nullbox{color:var(--muted)}
+body.dark .btn.sec{background:#22324f;color:#cfe0fa}
+body.dark .pill{background:#1b2740}
+body.dark .kbd{background:#1b2740;color:#cfe0fa}
+body.dark .note{background:#15233f}
+body.dark .note.key{background:#0e2e33}
+body.dark .note.warn{background:#33270f}
+body.dark .note.bad{background:#331515}
+body.dark .note b{color:var(--navy)}
+#darkBtn{margin-left:auto;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:18px;border-radius:8px;padding:5px 12px;cursor:pointer;transition:.15s}
+#darkBtn:hover{background:rgba(255,255,255,.28)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:16.5px}
+a{color:var(--blue);text-decoration:none}
+
+/* ---- Layout ---- */
+#topbar{position:sticky;top:0;z-index:50;background:linear-gradient(100deg,var(--navy),#16407f);color:#fff;display:flex;align-items:center;gap:14px;padding:12px 18px;box-shadow:0 2px 14px rgba(0,0,0,.18)}
+#topbar h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.2px}
+#topbar .sub{font-size:12.5px;color:#aecbf2;font-weight:400}
+#menuBtn{display:none;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:20px;border-radius:8px;padding:4px 11px;cursor:pointer}
+.wrap{display:flex;align-items:flex-start}
+#side{position:sticky;top:53px;height:calc(100vh - 53px);width:280px;overflow-y:auto;background:#fff;border-right:1px solid var(--line);padding:14px 10px 60px;flex:0 0 280px}
+#side .grp{font-size:11.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:16px 12px 6px;font-weight:700}
+#side a{display:block;padding:8px 12px;border-radius:9px;color:var(--ink);font-size:14.5px;margin:2px 4px;transition:.15s}
+#side a:hover{background:#eef4fc}
+#side a.active{background:var(--blue);color:#fff;font-weight:600}
+#side a .tag{font-size:11px;opacity:.7}
+main{flex:1 1 auto;min-width:0;padding:26px 40px 120px;max-width:1000px;margin:0 auto}
+
+/* ---- Panels ---- */
+.panel{display:none;animation:fade .35s ease}
+.panel.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2.title{font-size:30px;color:var(--navy);margin:.2em 0 .1em;border-bottom:3px solid var(--blue);padding-bottom:10px}
+h3{color:var(--navy);font-size:22px;margin:1.4em 0 .4em;display:flex;align-items:center;gap:9px}
+h3::before{content:"";width:6px;height:22px;background:var(--blue);border-radius:3px;display:inline-block}
+h4{color:var(--blue);font-size:18px;margin:1.1em 0 .3em}
+p{margin:.55em 0}
+ul,ol{margin:.4em 0 .8em;padding-left:1.4em}
+li{margin:.28em 0}
+.lead{font-size:18px;color:var(--muted)}
+.pill{display:inline-block;background:#e7f0fb;color:var(--blue);font-size:12.5px;font-weight:600;padding:2px 11px;border-radius:20px;margin:2px 4px 2px 0}
+.pill.warn{background:#fdf0e3;color:var(--warn)}
+.pill.ok{background:#e6f6ed;color:var(--ok)}
+
+/* cards / callouts */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.note{border-left:5px solid var(--blue);background:#f0f6ff;border-radius:0 12px 12px 0;padding:12px 16px;margin:14px 0}
+.note.key{border-color:var(--cyan);background:#e9fbff}
+.note.warn{border-color:var(--warn);background:#fff8ee}
+.note.bad{border-color:var(--bad);background:#fdeeec}
+.note.simple{border-color:#13a85a;background:#eafaf0;border-left-width:5px}
+body.dark .note.simple{background:#0f2e1d}
+.note b{color:var(--navy)}
+/* ---- step animation widget ---- */
+.anim{border:1px solid var(--line);border-radius:16px;margin:18px 0;overflow:hidden;box-shadow:var(--shadow);background:var(--card)}
+.anim .ahead{display:flex;align-items:center;gap:9px;background:#eef4fc;padding:10px 16px;font-weight:700;color:var(--navy);font-size:15px}
+body.dark .anim .ahead{background:#1b2740}
+.anim .astage{padding:10px 8px 4px;background:linear-gradient(180deg,#fbfdff,#f3f8ff)}
+body.dark .anim .astage{background:#0f1626}
+.anim svg{display:block;width:100%;height:auto}
+.anim .acap{padding:12px 18px;font-size:15.5px;min-height:30px;border-top:1px dashed var(--line);background:var(--card)}
+.anim .acap b{color:var(--bad)}
+.anim .actrl{display:flex;gap:9px;flex-wrap:wrap;align-items:center;padding:11px 16px;background:#f6faff;border-top:1px solid var(--line)}
+body.dark .anim .actrl{background:#141d30}
+.anim .prog{margin-left:auto;font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+/* svg node + arrow states */
+.anim .nd{transition:opacity .45s ease, transform .55s cubic-bezier(.34,1.3,.6,1)}
+.anim .nd.hidden{opacity:0;transform:translateY(26px)}
+.anim .ar{transition:opacity .5s ease}
+.anim .ar.hidden{opacity:0}
+.anim .ar.changing{stroke:#d6453d;stroke-width:4;animation:dash 1s ease}
+@keyframes dash{from{stroke-dasharray:6;stroke-dashoffset:40}to{stroke-dashoffset:0}}
+.anim .nd.glow rect.box{stroke:#13a85a;stroke-width:3.5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+
+/* tables */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:15px;overflow:hidden;border-radius:10px}
+th{background:var(--blue);color:#fff;padding:9px 11px;text-align:left}
+td{border:1px solid var(--line);padding:8px 11px;background:#fff}
+tr:nth-child(even) td{background:#f6faff}
+
+/* code */
+.codebox{background:var(--code-bg);border-radius:12px;margin:14px 0;overflow:hidden;box-shadow:var(--shadow)}
+.codebox .bar{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#0b1730;border-bottom:1px solid #1d2f55}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot.r{background:#ff5f56}.dot.y{background:#ffbd2e}.dot.g{background:#27c93f}
+.codebox .lang{margin-left:auto;font-size:11.5px;color:#7fa8de;font-family:'JetBrains Mono',monospace}
+pre{margin:0;padding:15px 17px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.7px;line-height:1.6;color:#e7eefb}
+.tok-kw{color:#ff9bce}.tok-type{color:#7fd3ff}.tok-str{color:#b8ee9a}.tok-num{color:#ffc97a}.tok-com{color:#6b80a8;font-style:italic}.tok-fn{color:#ffd479}
+
+/* playground */
+.play{border:1px solid var(--line);border-radius:14px;margin:16px 0;overflow:hidden;box-shadow:var(--shadow);background:#fff}
+.play .phead{display:flex;align-items:center;gap:10px;background:#eef4fc;padding:9px 14px;border-bottom:1px solid var(--line);font-weight:600;color:var(--navy);font-size:14px}
+.play .phead .js{font-family:'JetBrains Mono',monospace;font-size:11px;background:#fff3c4;color:#8a6d00;padding:1px 8px;border-radius:20px}
+.play textarea{width:100%;border:none;resize:vertical;min-height:150px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:13.7px;line-height:1.6;color:#22324f;background:#fbfdff;outline:none}
+.play .prun{display:flex;gap:10px;padding:10px 14px;background:#f6faff;border-top:1px solid var(--line)}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:8px 18px;font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{background:#245ea0;transform:translateY(-1px)}
+.btn.sec{background:#e7eef9;color:var(--navy)}
+.btn.sec:hover{background:#d6e3f6}
+.btn.sm{padding:5px 13px;font-size:13.5px}
+.btn:active{transform:translateY(0)}
+.out{font-family:'JetBrains Mono',monospace;font-size:13.5px;background:#0f1d3a;color:#9fe6b4;padding:13px 16px;white-space:pre-wrap;min-height:24px;border-top:1px solid var(--line)}
+.out:empty::before{content:"▶ กดปุ่ม Run เพื่อดูผลลัพธ์";color:#5a7099}
+
+/* demo viz */
+.demo{border:1px solid var(--line);border-radius:14px;padding:16px;margin:16px 0;background:linear-gradient(180deg,#ffffff,#f7fbff);box-shadow:var(--shadow)}
+.demo .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.demo input[type=text],.demo input[type=number]{border:1.5px solid var(--line);border-radius:8px;padding:7px 11px;font-family:inherit;font-size:14.5px;width:120px}
+.demo input:focus{outline:none;border-color:var(--blue)}
+.demo .stage{min-height:90px;display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:10px;background:#fff;border:1px dashed var(--line);border-radius:10px;position:relative}
+.demo .hint{font-size:13px;color:var(--muted);margin-top:8px}
+.demo label.sl{font-size:14px;color:var(--navy);font-weight:600}
+
+/* stack/queue boxes */
+.cell{min-width:46px;height:42px;display:flex;align-items:center;justify-content:center;border:2px solid var(--blue);background:#eaf3ff;border-radius:8px;font-weight:700;color:var(--navy);font-family:'JetBrains Mono',monospace;transition:.3s;position:relative}
+.cell.empty{border-style:dashed;border-color:var(--line);background:#fafcff;color:#c0cde0;font-weight:400}
+.cell.flash{animation:pop .45s}
+@keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.cell .ptr{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:10.5px;color:var(--bad);font-weight:700;white-space:nowrap}
+.cell .idx{position:absolute;bottom:-19px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted);font-weight:400}
+.stackcol{display:flex;flex-direction:column-reverse;gap:5px;align-items:center}
+
+/* linked list nodes */
+.llrow{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+.node{display:flex;align-items:stretch;border:2px solid var(--navy);border-radius:9px;overflow:hidden;box-shadow:0 3px 8px rgba(15,42,94,.12);transition:.3s}
+.node .v{padding:0 14px;display:flex;align-items:center;font-weight:700;font-size:17px;background:var(--blue);color:#fff;font-family:'JetBrains Mono',monospace}
+.node .nx{padding:0 9px;display:flex;align-items:center;background:#dbe7f7;color:var(--navy);font-size:11px}
+.arrow{font-size:24px;color:var(--bad);margin:0 4px;font-weight:700}
+.nullbox{padding:6px 10px;border:2px dashed var(--muted);border-radius:8px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:13px}
+.lbl{font-size:12px;color:var(--bad);font-weight:700;margin-bottom:3px;text-align:center}
+
+/* canvas wrappers */
+canvas{max-width:100%;background:#fff;border:1px solid var(--line);border-radius:10px}
+
+/* call stack viz */
+.frame{padding:8px 14px;border:2px solid var(--blue);border-radius:8px;margin:4px 0;background:#eaf3ff;font-family:'JetBrains Mono',monospace;font-size:14px;transition:.3s}
+.frame.done{border-color:var(--ok);background:#e6f6ed}
+.frame.active{border-color:var(--warn);background:#fff3e3;box-shadow:0 0 0 3px #ffe1bd}
+
+/* dp grid */
+.dpgrid{display:inline-grid;gap:3px;font-family:'JetBrains Mono',monospace}
+.dpgrid .c{width:42px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:6px;background:#fff;font-size:14px;transition:.25s}
+.dpgrid .c.head{background:var(--navy);color:#fff;font-weight:700}
+.dpgrid .c.fill{background:#eaf3ff;color:var(--navy);font-weight:700}
+.dpgrid .c.best{background:#ffe1bd;border-color:var(--warn);color:#9a5a00;font-weight:700}
+.dpgrid .c.flash{animation:pop .4s}
+
+footer{color:var(--muted);font-size:13px;text-align:center;padding:30px;border-top:1px solid var(--line);margin-top:40px}
+.kbd{font-family:'JetBrains Mono',monospace;background:#eef2f8;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 7px;font-size:13px}
+.quiz{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0;box-shadow:var(--shadow)}
+.quiz .q{font-weight:600;color:var(--navy)}
+.quiz .ans{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:#2a3c5a}
+.quiz.open .ans{display:block}
+@media(max-width:900px){
+  #side{position:fixed;left:0;top:53px;transform:translateX(-100%);transition:.25s;z-index:40;box-shadow:8px 0 24px rgba(0,0,0,.15)}
+  #side.open{transform:none}
+  #menuBtn{display:block}
+  main{padding:20px 16px 100px}
+}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <button id="menuBtn" onclick="document.getElementById('side').classList.toggle('open')">☰</button>
+  <div>
+    <h1>DSA Interactive 🧩</h1>
+    <div class="sub">Data Structures & Algorithms · DII 2026 · เรียน + ลองรันโค้ดได้จริง</div>
+  </div>
+  <button id="darkBtn" onclick="toggleDark()" title="สลับโหมดมืด/สว่าง">🌙</button>
+</div>
+
+<div class="wrap">
+<nav id="side">
+  <div class="grp">เริ่มต้น</div>
+  <a data-go="home" class="active">🏠 ภาพรวม & วิธีใช้</a>
+  <div class="grp">Part 1 — พื้นฐาน</div>
+  <a data-go="l1">Lesson 1 <span class="tag">· Introduction</span></a>
+  <a data-go="l2">Lesson 2 <span class="tag">· Stack & Queue</span></a>
+  <div class="grp">⭐ เน้นหนัก (ยังไม่เคยออก)</div>
+  <a data-go="l3">Lesson 3 <span class="tag">· Linked List</span></a>
+  <a data-go="l4">Lesson 4 <span class="tag">· Linked List ต่อ</span></a>
+  <a data-go="l5">Lesson 5 <span class="tag">· ADT & Generics</span></a>
+  <a data-go="l6">Lesson 6 <span class="tag">· Big O</span></a>
+  <a data-go="l7">Lesson 7 <span class="tag">· Recursion</span></a>
+  <a data-go="hanoi">Tower of Hanoi</a>
+  <a data-go="l8">Lesson 8 <span class="tag">· Dynamic Prog.</span></a>
+  <div class="grp">เสริม</div>
+  <a data-go="space">Space Complexity</a>
+  <a data-go="hw">📝 เฉลยการบ้าน (Java)</a>
+  <a data-go="quiz">ทบทวน 90% (ถาม-ตอบ)</a>
+</nav>
+
+<main id="content"><!-- panels injected/written below --></main>
+</div>
+
+<!-- ================= PANELS ================= -->
+<div style="display:none" id="panels">
+
+<!-- ---------- HOME ---------- -->
+<section class="panel show" id="p-home">
+  <h2 class="title">ภาพรวม & วิธีใช้</h2>
+  <p class="lead">เว็บนี้สรุปวิชา <b>Data Structures & Algorithms</b> ทั้ง 9 บท ตั้งแต่พื้นฐานจนถึง Dynamic Programming — อ่านเข้าใจง่าย มีรูปประกอบ และ <b>กดรันโค้ด/กดเล่น visualization ได้จริงในหน้าเว็บ</b></p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>🎮 ลองเล่นได้จริง</h4>
+      <p>ทุกบทมีกล่อง <span class="pill js">Try it</span> ที่แก้โค้ดแล้วกด Run เห็นผลทันที และมี visualization กดปุ่ม push/pop/add/remove ดูการทำงานแบบ step-by-step</p>
+    </div>
+    <div class="card">
+      <h4>⭐ เน้นจุดที่ยังไม่เคยออก</h4>
+      <p>Lesson 1–2 เคยออกบ้างแล้ว → สรุปกระชับ<br>Lesson 3 เป็นต้นไป → อธิบายละเอียดเต็ม พร้อมภาพและโค้ดรันได้</p>
+    </div>
+  </div>
+
+  <div class="note key"><b>💡 โค้ดในเว็บนี้เขียน 2 ภาษา:</b> โค้ด <b>Java</b> (ตามที่อาจารย์สอน — ไว้อ่าน/จำไปสอบ) และกล่อง <b>JavaScript</b> ที่กดรันได้จริงในเบราว์เซอร์ (ตรรกะเหมือนกันเป๊ะ ต่างแค่ไวยากรณ์) เพราะเบราว์เซอร์รัน Java ตรงๆ ไม่ได้ แต่ตรรกะ algorithm เหมือนกันทุกอย่าง</p></div>
+
+  <h3>โครงวิชาทั้งหมด</h3>
+  <table>
+    <tr><th>บท</th><th>เรื่อง</th><th>หัวใจ</th></tr>
+    <tr><td>1</td><td>Introduction</td><td>DS คืออะไร, Algorithm, Linear vs Non-Linear</td></tr>
+    <tr><td>2</td><td>Stack & Queue</td><td>LIFO vs FIFO</td></tr>
+    <tr><td>3 ⭐</td><td>Linked List</td><td>node + pointer, ยืดหดได้</td></tr>
+    <tr><td>4 ⭐</td><td>Linked List ต่อ</td><td>Tailed / Circular / Doubly</td></tr>
+    <tr><td>5 ⭐</td><td>ADT & Generics</td><td>ซ่อน implement, <code>&lt;E&gt;</code></td></tr>
+    <tr><td>6 ⭐</td><td>Efficiency</td><td>Big O — วัดประสิทธิภาพ</td></tr>
+    <tr><td>7 ⭐</td><td>Recursion</td><td>เรียกตัวเอง + call stack</td></tr>
+    <tr><td>—</td><td>Tower of Hanoi</td><td>เคสคลาสสิก O(2ⁿ)</td></tr>
+    <tr><td>8 ⭐</td><td>Dynamic Programming</td><td>Recursion + ความจำ</td></tr>
+  </table>
+  <p class="hint">หมายเหตุ: Part 2 (Searching/Sorting, Tree, Graph, Hash) ยังไม่อยู่ในชุดสไลด์นี้</p>
+</section>
+
+<!-- ---------- LESSON 1 ---------- -->
+<section class="panel" id="p-l1">
+  <h2 class="title">Lesson 1 — Introduction</h2>
+  <p class="lead">ทำความรู้จักว่า "Data Structure" และ "Algorithm" คืออะไร และทำไมต้องเรียน</p>
+
+  <h3>Data Structure คืออะไร</h3>
+  <p><b>วิธีเก็บและจัดระเบียบข้อมูล</b>ให้เข้าถึงและแก้ไขได้ง่าย — เปรียบเหมือนเปลี่ยนกองเอกสารที่กระจัดกระจาย (CHAOS) ให้เป็นตู้เก็บแฟ้มที่จัดเรียงดี (ORGANIZED)</p>
+  <div class="note key"><b>กฎทอง:</b> "No single data structure is perfect" — ไม่มีโครงสร้างไหนดีที่สุดทุกด้าน ต้อง<b>เลือกให้เหมาะกับงาน</b> (นี่คือแก่นของทั้งวิชา)</div>
+  <p>ตัวอย่างโครงสร้างข้อมูล: <span class="pill">Array</span><span class="pill">Linked List</span><span class="pill">Stack</span><span class="pill">Queue</span><span class="pill">Hash Table</span><span class="pill">Tree</span><span class="pill">Graph</span></p>
+
+  <h3>Algorithm คืออะไร</h3>
+  <p>ลำดับขั้นตอนที่ <b>แปลง Input → Output</b> (Input → [Algorithm: step-by-step] → Output)</p>
+  <table>
+    <tr><th>Algorithm ที่ถูกต้อง ✅</th><th>Algorithm ที่ผิด ❌</th></tr>
+    <tr><td>หยุดทำงานเอง (terminate) และให้ผลถูกต้อง<b>ทุก</b> input</td><td>วนไม่จบ (runs forever) หรือให้ผลผิด/ไม่คาดคิด</td></tr>
+  </table>
+
+  <h3>Linear vs Non-Linear</h3>
+  <table>
+    <tr><th></th><th>Linear (เชิงเส้น)</th><th>Non-Linear</th></tr>
+    <tr><td>การจัดเรียง</td><td>ต่อกันเป็นเส้นตรง</td><td>เป็นลำดับชั้น เชื่อมหลายระดับ</td></tr>
+    <tr><td>ความยาก</td><td>เข้าใจ/เขียนง่ายกว่า</td><td>ยากกว่า</td></tr>
+    <tr><td>ตัวอย่าง</td><td>Array, List, Queue, Stack</td><td>Tree, Graph, Hash Table</td></tr>
+  </table>
+
+  <h3>Array — ข้อดีข้อเสีย (ปูพื้นสู่ Linked List)</h3>
+  <p>Array เก็บข้อมูลในช่องที่<b>ติดกัน</b> เข้าถึงด้วย index ได้เร็ว แต่...</p>
+  <ul>
+    <li>✅ <b>เข้าถึงเร็ว:</b> <code>name[2]</code> ได้ทันที</li>
+    <li>⚠️ <b>เพิ่ม/ลบกลางๆ ยาก:</b> ต้องเลื่อนทุกตัวเพื่อไม่ให้เกิดช่องว่าง</li>
+    <li>⚠️ <b>ขยายยาก:</b> ถ้าเต็มต้องสร้าง array ใหม่ใหญ่กว่าแล้วคัดลอกทั้งหมด</li>
+  </ul>
+  <div class="note warn"><b>ปัญหานี้เองที่นำไปสู่ Linked List</b> (Lesson 3) ที่เพิ่ม/ลบได้เร็วและยืดหดได้ → ไปดูกันต่อ</div>
+
+  <div class="note"><b>เกร็ดข้อสอบ:</b> Group Activity 2 (หาเส้นทางสั้นสุด Home→CAMT บนแผนที่) จริงๆ คือโจทย์ <b>Shortest Path (Graph)</b> ที่อาจารย์แอบปูพื้นไว้สำหรับ Part 2</div>
+</section>
+
+<!-- ---------- LESSON 2 ---------- -->
+<section class="panel" id="p-l2">
+  <h2 class="title">Lesson 2 — Stack & Queue</h2>
+  <p class="lead">โครงสร้าง 2 แบบที่ต่างกันแค่ "เอาของออกตรงไหน"</p>
+
+  <h3>Stack = LIFO (เข้าทีหลัง ออกก่อน)</h3>
+  <p>เหมือนกองจานซ้อนกัน — วางจานบนสุด หยิบก็หยิบบนสุด operation หลัก: <b>push</b> (ใส่), <b>pop</b> (เอาออก), <b>peek</b> (ดูตัวบน)</p>
+
+  <div class="demo" id="d-stack">
+    <div class="ctrl">
+      <input type="text" id="stk-in" placeholder="ค่า เช่น 5" value="5">
+      <button class="btn sm" onclick="Stack.push()">push ⬆️</button>
+      <button class="btn sm sec" onclick="Stack.pop()">pop ⬇️</button>
+      <button class="btn sm sec" onclick="Stack.reset()">ล้าง</button>
+    </div>
+    <div class="stage"><div class="stackcol" id="stk-stage"></div></div>
+    <div class="hint" id="stk-msg">กด push เพื่อใส่ค่า — ตัวบนสุดคือ TOP จะถูก pop ออกก่อนเสมอ</div>
+  </div>
+
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java — MyStack</span></div>
+<pre class="java">public class MyStack {
+    private int top = -1;                       // ตัวชี้ตำแหน่งบนสุด เริ่ม -1 = ยังว่าง
+    private int[] list;                          // array เก็บข้อมูลจริง
+    public MyStack(int size) {                   // constructor: กำหนดขนาด stack
+        list = new int[size];                    // จอง array ตามขนาดที่ขอ
+    }
+    public void push(int x) {                    // ใส่ค่า x ลง stack
+        top = top + 1;                           // เลื่อน top ขึ้น 1
+        list[top] = x;                           // วาง x ไว้ตำแหน่งบนสุด
+    }
+    public int pop() {                           // เอาค่าบนสุดออก
+        int x = list[top];                       // อ่านค่าตำแหน่ง top เก็บไว้
+        top = top - 1;                           // เลื่อน top ลง 1 (ลบออกจาก stack)
+        return x;                                // คืนค่าที่เอาออก
+    }
+}</pre></div>
+
+  <h3>Queue = FIFO (เข้าก่อน ออกก่อน)</h3>
+  <p>เหมือนคนต่อแถว — ใครมาก่อนได้ก่อน operation: <b>enQueue</b> (ต่อท้าย rear), <b>deQueue</b> (เอาออกหน้า front)</p>
+
+  <div class="demo" id="d-queue">
+    <div class="ctrl">
+      <input type="text" id="q-in" placeholder="ค่า" value="7">
+      <button class="btn sm" onclick="Queue.enq()">enQueue ➡️</button>
+      <button class="btn sm sec" onclick="Queue.deq()">deQueue ↘️</button>
+      <button class="btn sm sec" onclick="Queue.reset()">ล้าง</button>
+    </div>
+    <div class="stage" style="padding-top:26px"><div class="llrow" id="q-stage"></div></div>
+    <div class="hint" id="q-msg">FRONT = ตัวที่จะออกก่อน, REAR = ตัวที่เพิ่งเข้า</div>
+  </div>
+
+  <h3>ปัญหา Queue แบบ Array → Circular Array</h3>
+  <p>ถ้า deQueue แล้วเลื่อนทุกตัวมาชิดซ้ายจะ<b>เปลือง</b> (O(n) ต่อครั้ง) วิธีฉลาดคือใช้ <b>Circular Array</b>: เลื่อนแค่ตัวชี้ และวนกลับต้น array ด้วยสูตร</p>
+  <div class="note key">index ถัดไป = <code>(rear + 1) % SIZE</code> &nbsp;→&nbsp; พอ rear ถึงท้าย array ก็วนกลับช่อง 0</div>
+
+  <div class="demo" id="d-cq">
+    <div class="ctrl">
+      <span class="label sl">Circular Queue (SIZE = 8):</span>
+      <button class="btn sm" onclick="CQ.enq()">enQueue</button>
+      <button class="btn sm sec" onclick="CQ.deq()">deQueue</button>
+      <button class="btn sm sec" onclick="CQ.reset()">ล้าง</button>
+    </div>
+    <div class="stage" style="padding-top:26px;padding-bottom:24px"><div class="llrow" id="cq-stage"></div></div>
+    <div class="hint" id="cq-msg">สังเกตว่า REAR วนกลับช่อง 0 ได้เมื่อถึงท้าย</div>
+  </div>
+
+  <h3>การประยุกต์: ตรวจวงเล็บสมดุลด้วย Stack</h3>
+  <p>เจอ <code>(</code> → push, เจอ <code>)</code> → pop · จบแล้ว stack ว่าง = สมดุล</p>
+  <div class="demo" id="d-bracket">
+    <div class="ctrl">
+      <input type="text" id="br-in" value="((A*2)+(3+4))" style="width:240px">
+      <button class="btn sm" onclick="Bracket.check()">ตรวจสอบ</button>
+    </div>
+    <div class="stage" id="br-stage" style="font-family:'JetBrains Mono',monospace;font-size:14px;display:block"></div>
+  </div>
+
+  <div class="play" data-seed="bracket"></div>
+</section>
+
+<!-- ---------- LESSON 3 ---------- -->
+<section class="panel" id="p-l3">
+  <h2 class="title">Lesson 3 — Linked List ⭐</h2>
+  <p class="lead">โครงสร้างข้อมูลแบบลูกโซ่ — แก้จุดอ่อนของ Array เรื่องการเพิ่ม/ลบและการขยายขนาด</p>
+
+  <h3>แนวคิด: node + pointer</h3>
+  <p>Linked List ไม่เก็บข้อมูลในช่องที่ติดกันเหมือน Array แต่เก็บแต่ละข้อมูลไว้ใน <b>node</b> โดยแต่ละ node มี 2 ส่วน:</p>
+  <ul>
+    <li><b>element</b> — ตัวข้อมูลจริง (เช่น เลข 34)</li>
+    <li><b>next</b> — pointer (ตัวชี้) บอกว่า node ถัดไปอยู่ที่ไหนในหน่วยความจำ</li>
+  </ul>
+  <p>node สามารถกระจายอยู่ที่ไหนก็ได้ในหน่วยความจำ (non-contiguous) แค่ "ชี้" หากันด้วย next ก็เรียงเป็นลำดับได้ node ตัวสุดท้ายมี <code>next = null</code> (ไม่มีตัวถัดไป)</p>
+
+  <div class="note simple"><b>🧒 อธิบายแบบง่ายสุดๆ</b><br>
+  คิดว่า Linked List = <b>ขบวนรถไฟ</b> 🚂🚃🚃🚃<br>
+  • แต่ละ <b>node</b> = ตู้รถไฟ 1 ตู้ · ข้างในตู้มี 2 อย่าง: <b>ของที่ขนอยู่ (element)</b> กับ <b>ขอเกี่ยวที่ต่อไปตู้ถัดไป (next)</b><br>
+  • <b>head</b> = หัวรถจักร (บอกว่าขบวนเริ่มที่ตู้ไหน)<br>
+  • ตู้สุดท้ายไม่มีตู้ต่อ → ขอเกี่ยวห้อยลม = <b>null</b><br>
+  ✨ จุดเด็ด: ถ้าอยากเพิ่ม/แทรก/ลบตู้ ไม่ต้องยกทั้งขบวน <b>แค่ปลดขอเกี่ยวแล้วเกี่ยวใหม่</b> ก็พอ! (ต่างจาก Array ที่เหมือนเก้าอี้ติดพื้นเป็นแถว จะแทรกต้องเลื่อนทุกตัว)</div>
+
+  <div class="demo">
+    <div class="lbl" style="text-align:left">ภาพ node 3 ตัวเชื่อมกัน (ตัวสุดท้ายชี้ null)</div>
+    <div class="stage" style="padding-top:24px">
+      <div class="llrow">
+        <div><div class="lbl">head</div>
+        <div class="node"><div class="v">34</div><div class="nx">next</div></div></div>
+        <span class="arrow">→</span>
+        <div class="node"><div class="v">8</div><div class="nx">next</div></div>
+        <span class="arrow">→</span>
+        <div class="node"><div class="v">64</div><div class="nx">next</div></div>
+        <span class="arrow">→</span>
+        <div class="nullbox">null</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Array vs Linked List (ตารางที่ต้องจำ)</h3>
+  <table>
+    <tr><th></th><th>Array</th><th>Linked List</th></tr>
+    <tr><td>เข้าถึงข้อมูล</td><td>✅ สุ่มด้วย index ได้ทันที <b>O(1)</b></td><td>⚠️ ต้องไล่ทีละตัวจาก head <b>O(n)</b></td></tr>
+    <tr><td>ตำแหน่งในหน่วยความจำ</td><td>ติดกัน (contiguous)</td><td>กระจายที่ไหนก็ได้ เชื่อมด้วย pointer</td></tr>
+    <tr><td>insert / delete</td><td>⚠️ ช้า ต้องเลื่อนสมาชิก</td><td>✅ เร็ว แค่ขยับ pointer</td></tr>
+    <tr><td>จองหน่วยความจำ</td><td>ตอน compile (static) ขนาดตายตัว</td><td>ตอน run (dynamic) ยืด/หดได้</td></tr>
+  </table>
+
+  <h3>โค้ด Node และ LinkedList</h3>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public class Node {                  // 1 node ของ linked list
+    int element;                     // ส่วนเก็บข้อมูล (ค่าจริง)
+    Node next;                       // ตัวชี้ไป node ถัดไป (ตัวสุดท้าย = null)
+    public Node(int data) {          // constructor: สร้าง node พร้อมใส่ค่า
+        this.element = data;         // เก็บค่าที่รับมาไว้ใน element
+    }
+}
+
+public class LinkedList {
+    Node head;                       // ตัวชี้ "หัวขบวน" (node แรกของ list)
+    public LinkedList(int element) { // constructor: สร้าง list พร้อม node แรก
+        head = new Node(element);    // สร้าง node แรก
+        head.next = null;            // ยังไม่มีตัวถัดไป → null
+    }
+
+    // เพิ่มที่หัว: สร้าง node ใหม่ ให้ next ชี้ head เดิม แล้วเลื่อน head มาตัวใหม่
+    public void addFirst(int element) {
+        Node temp = new Node(element); // สร้าง node ใหม่
+        temp.next = head;              // ให้ตัวใหม่ชี้ไปหัวเดิม
+        head = temp;                   // เลื่อน head มาที่ตัวใหม่ (ตัวใหม่กลายเป็นหัว)
+    }
+
+    // ลบตัวหัว: เลื่อน head ไปตัวถัดไป (ตัวเก่าไม่มีใครชี้ = กลายเป็น garbage)
+    public void removeFirst() {
+        head = head.next;             // head ข้ามไปตัวที่ 2 → ตัวแรกหลุดออกจาก list
+    }
+}</pre></div>
+
+  <h3>ลองเล่น: เพิ่ม/ลบ node แบบเห็นภาพ</h3>
+  <div class="demo" id="d-ll">
+    <div class="ctrl">
+      <input type="text" id="ll-in" placeholder="ค่า" value="9">
+      <button class="btn sm" onclick="LL.addFirst()">addFirst</button>
+      <button class="btn sm" onclick="LL.addLast()">addLast</button>
+      <button class="btn sm sec" onclick="LL.removeFirst()">removeFirst</button>
+      <button class="btn sm sec" onclick="LL.reset()">ล้าง</button>
+    </div>
+    <div class="stage" style="padding-top:26px"><div class="llrow" id="ll-stage"></div></div>
+    <div class="hint" id="ll-msg">addFirst เพิ่มที่หัว · removeFirst ลบที่หัว — สังเกต pointer ขยับ ไม่ต้องเลื่อนข้อมูลเหมือน Array</div>
+  </div>
+
+  <div class="play" data-seed="ll"></div>
+
+  <h3>🎬 อนิเมชัน: แทรก / ลบ node กลางขบวน (เหมือนสไลด์)</h3>
+  <p>นี่คือหัวใจของ Linked List — การ "ปลดขอเกี่ยวแล้วเกี่ยวใหม่" กดดูทีละสเตปได้เลย</p>
+  <div class="note simple"><b>🧒 อ่านอนิเมชันยังไง:</b> ลูกศร = ขอเกี่ยวที่บอกว่า "ตู้นี้ต่อไปตู้ไหน" · เวลาแทรก/ลบ เราแค่<b>เปลี่ยนปลายลูกศร</b> ไม่ได้ขยับตู้อื่นเลย · ลูกศรสีแดง = อันที่กำลังเปลี่ยนในสเตปนั้น</div>
+
+  <div class="anim" id="anim-insert"></div>
+  <div class="anim" id="anim-remove"></div>
+
+  <div class="note warn"><b>📝 เคล็ดลับสอบ (อาจารย์บอกเอง):</b> ถ้าไม่มั่นใจจะเขียนโค้ด <b>วาด diagram แบบนี้อธิบายแทนได้</b> — วาดตู้ (node) → ลากลูกศร next → เขียนกำกับว่าสเตปไหนเปลี่ยนลูกศรเส้นไหน ก็ได้คะแนนความเข้าใจ · สิ่งสำคัญคือ <b>ลำดับการต่อลูกศรต้องถูก</b> (ดูในอนิเมชันด้านบน): ตอนแทรกต้อง "เกี่ยวตัวใหม่ไปข้างหน้าก่อน แล้วค่อยเปลี่ยนตัวข้างหน้ามาชี้ตัวใหม่" — ถ้าสลับลำดับ ขบวนจะขาด!</div>
+
+  <h3>⚠️ กับดักข้อสอบ: Object Reference (<code>==</code> vs ค่า)</h3>
+  <p>ใน Java ตัวแปรแบบ object (เช่น <code>Integer</code>, <code>String</code>, node) เก็บ <b>reference (ที่อยู่)</b> ไม่ใช่ค่า — ส่วน primitive (<code>int</code>) เก็บค่าจริง</p>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java — output คืออะไร?</span></div>
+<pre class="java">Integer y = new Integer(20);                    // สร้าง object Integer ตัวที่ 1 (ค่า 20)
+Integer w = new Integer(20);                    // สร้าง object ตัวที่ 2 (ค่า 20 เหมือนกัน แต่คนละที่อยู่)
+if (w == y) System.out.println("1. w == y");   // ❌ ไม่พิมพ์ — == เทียบที่อยู่ ไม่ใช่ค่า
+w = y;                                          // ให้ w ชี้ไป object เดียวกับ y
+if (w == y) System.out.println("2. w == y");   // ✅ พิมพ์ — ตอนนี้ที่อยู่เดียวกันแล้ว</pre></div>
+  <div class="note bad"><b>ผลลัพธ์: พิมพ์แค่ "2. w == y"</b> — เพราะ <code>==</code> เทียบว่า "ชี้ object เดียวกันไหม" ไม่ได้เทียบค่า · <code>new</code> สร้าง object ใหม่เสมอ ได้ที่อยู่ใหม่ · ถ้าจะเทียบ<b>ค่า</b>ต้องใช้ <code>.equals()</code></div>
+
+  <h3>ทำไมต้องเขียนเองทั้งที่มี API?</h3>
+  <p>เพื่อ<b>เข้าใจการทำงานและ complexity จริง</b> จะได้เลือกใช้ API ได้ถูกและมีประสิทธิภาพ</p>
+</section>
+
+<!-- ---------- LESSON 4 ---------- -->
+<section class="panel" id="p-l4">
+  <h2 class="title">Lesson 4 — Linked List (ต่อ) ⭐</h2>
+  <p class="lead">พัฒนา Linked List พื้นฐานให้เก่งขึ้น 3 แบบ</p>
+
+  <h3>ทบทวน: เดินทั่ว list ด้วย while loop</h3>
+  <p>เทคนิคพื้นฐานที่ใช้ซ้ำในเกือบทุก method (printAll, getSize, getLast): ตั้ง <code>current = head</code> แล้ววนจน <code>current == null</code></p>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public void printAll() {                         // พิมพ์ทุกค่าใน list
+    Node current = head;                         // เริ่มที่หัว
+    while (current != null) {                     // วนจนกว่าจะหมด list
+        System.out.print(current.element + " ");  // พิมพ์ค่าตัวปัจจุบัน
+        current = current.next;                   // ขยับไป node ถัดไป
+    }
+}
+public int countNodes() {                        // นับจำนวน node (getSize)
+    Node current = head;                         // เริ่มที่หัว
+    int count = 0;                               // ตัวนับ
+    while (current != null) {                     // เดินทั้ง list
+        count++;                                 // เจอ 1 ตัว นับเพิ่ม
+        current = current.next;                   // ไปตัวถัดไป
+    }
+    return count;                                // คืนจำนวนทั้งหมด
+}
+public int getLast() {                           // หาค่าตัวสุดท้าย
+    Node current = head;                         // เริ่มที่หัว
+    while (current.next != null)                  // หยุดเมื่อตัวถัดไปเป็น null (= ตัวสุดท้าย)
+        current = current.next;                   // เดินต่อไปเรื่อยๆ
+    return current.element;                      // คืนค่าตัวสุดท้าย
+}</pre></div>
+  <div class="play" data-seed="lltraverse"></div>
+
+  <h3>1) Tailed Linked List</h3>
+  <p>ปัญหา: <code>addLast</code> ของ list ธรรมดาต้องเดินไปท้ายสุดทุกครั้ง (O(n)) · แก้โดยเพิ่มตัวชี้ <b>tail</b> เก็บตำแหน่งท้ายไว้ → addLast เหลือ <b>O(1)</b></p>
+  <div class="note warn">ข้อแลกเปลี่ยน: มี pointer เพิ่ม = ต้อง maintain เพิ่ม (ทุกครั้งที่เพิ่ม/ลบท้าย ต้องอัปเดต tail ด้วย)</div>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">Node tail;                           // ตัวชี้ "ท้ายขบวน" (เก็บไว้เพื่อไม่ต้องเดินหา)
+public void addLast(int element) {   // เพิ่มที่ท้าย — เร็ว O(1) เพราะรู้ตำแหน่งท้ายอยู่แล้ว
+    Node temp = new Node(element);   // สร้าง node ใหม่
+    tail.next = temp;                // ต่อ node ใหม่ท้ายตัวเดิม
+    tail = temp;                     // เลื่อน tail มาที่ตัวใหม่ (ตัวใหม่กลายเป็นท้าย)
+}</pre></div>
+
+  <h3>2) Circular Linked List</h3>
+  <p>ให้ node ท้าย (tail) <b>ชี้กลับไปที่ head</b> → วนซ้ำได้ไม่รู้จบ เหมาะกับงานที่ต้องวนเป็นรอบ (เช่น สลับเทิร์นผู้เล่น)</p>
+  <div class="demo">
+    <div class="stage" style="padding-top:24px;padding-bottom:24px;justify-content:center">
+      <svg width="420" height="120" viewBox="0 0 420 120">
+        <g font-family="JetBrains Mono" font-size="14" font-weight="700">
+        <rect x="20" y="40" width="60" height="40" rx="8" fill="#2f74c0"/><text x="50" y="65" fill="#fff" text-anchor="middle">a0</text>
+        <rect x="130" y="40" width="60" height="40" rx="8" fill="#2f74c0"/><text x="160" y="65" fill="#fff" text-anchor="middle">a1</text>
+        <rect x="240" y="40" width="60" height="40" rx="8" fill="#2f74c0"/><text x="270" y="65" fill="#fff" text-anchor="middle">a2</text>
+        <rect x="350" y="40" width="60" height="40" rx="8" fill="#2f74c0"/><text x="380" y="65" fill="#fff" text-anchor="middle">a3</text>
+        <line x1="80" y1="60" x2="128" y2="60" stroke="#111" stroke-width="2" marker-end="url(#ar)"/>
+        <line x1="190" y1="60" x2="238" y2="60" stroke="#111" stroke-width="2" marker-end="url(#ar)"/>
+        <line x1="300" y1="60" x2="348" y2="60" stroke="#111" stroke-width="2" marker-end="url(#ar)"/>
+        <path d="M380 80 Q 215 135 50 80" fill="none" stroke="#1e90ff" stroke-width="2.5" marker-end="url(#arb)"/>
+        <text x="215" y="118" fill="#1e90ff" text-anchor="middle" font-size="12">tail.next → head (วนกลับ)</text>
+        </g>
+        <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#111"/></marker>
+        <marker id="arb" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1e90ff"/></marker></defs>
+      </svg>
+    </div>
+  </div>
+
+  <h3>3) Doubly Linked List</h3>
+  <p>ปกติเดินได้ทางเดียว (ไปหน้า) · Doubly เพิ่มตัวชี้ <b>prev</b> ให้เดิน<b>ถอยหลัง</b>ได้ด้วย ต้องสร้าง node แบบใหม่ที่มีทั้ง next และ prev</p>
+  <div class="demo">
+    <div class="stage" style="padding-top:24px;padding-bottom:14px;justify-content:center">
+      <svg width="460" height="110" viewBox="0 0 460 110">
+        <g font-family="JetBrains Mono" font-size="14" font-weight="700">
+        <rect x="20" y="35" width="80" height="44" rx="8" fill="#fff" stroke="#0f2a5e" stroke-width="2"/><text x="60" y="62" text-anchor="middle" fill="#0f2a5e">x1</text>
+        <rect x="150" y="35" width="80" height="44" rx="8" fill="#fff" stroke="#0f2a5e" stroke-width="2"/><text x="190" y="62" text-anchor="middle" fill="#0f2a5e">x2</text>
+        <rect x="280" y="35" width="80" height="44" rx="8" fill="#fff" stroke="#0f2a5e" stroke-width="2"/><text x="320" y="62" text-anchor="middle" fill="#0f2a5e">x3</text>
+        <line x1="100" y1="48" x2="148" y2="48" stroke="#d6453d" stroke-width="2" marker-end="url(#arR)"/>
+        <line x1="230" y1="48" x2="278" y2="48" stroke="#d6453d" stroke-width="2" marker-end="url(#arR)"/>
+        <line x1="148" y1="68" x2="100" y2="68" stroke="#1f9d57" stroke-width="2" marker-end="url(#arG)"/>
+        <line x1="278" y1="68" x2="230" y2="68" stroke="#1f9d57" stroke-width="2" marker-end="url(#arG)"/>
+        <text x="395" y="44" fill="#d6453d" font-size="12">next →</text>
+        <text x="392" y="72" fill="#1f9d57" font-size="12">← prev</text>
+        </g>
+        <defs><marker id="arR" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#d6453d"/></marker>
+        <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1f9d57"/></marker></defs>
+      </svg>
+    </div>
+  </div>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java — Doubly Node</span></div>
+<pre class="java">public class Node {                  // node ของ Doubly Linked List
+    int element;                     // ข้อมูล
+    Node next;                       // ตัวชี้ไปข้างหน้า (ตัวถัดไป)
+    Node prev;                       // ตัวชี้ถอยหลัง (ตัวก่อนหน้า) ← ของใหม่
+    public Node(int data) {          // constructor
+        this.element = data;         // เก็บค่า
+    }
+}</pre></div>
+  <div class="note"><b>สรุป trade-off:</b> ยิ่งเพิ่ม pointer (tail, prev, วนกลับ) ยิ่งทำงานบางอย่างเร็ว/ยืดหยุ่นขึ้น แต่<b>ต้อง maintain มากขึ้น</b>ในทุก method ที่แก้ไข list</div>
+</section>
+
+<!-- ---------- LESSON 5 ---------- -->
+<section class="panel" id="p-l5">
+  <h2 class="title">Lesson 5 — ADT & Generics ⭐</h2>
+  <p class="lead">มองโครงสร้างข้อมูลเป็น "กล่องดำ" และทำให้เก็บข้อมูลได้ทุกชนิด</p>
+
+  <h3>Abstract Data Type (ADT)</h3>
+  <p>ADT = ชนิดข้อมูลที่นิยามด้วย <b>"ชุดค่า + ชุด operation"</b> โดย<b>ซ่อนวิธี implement</b> ไว้ภายใน ผู้ใช้แค่รู้ว่ามันทำอะไรได้ (push/pop) ไม่ต้องรู้ว่าข้างในใช้ array หรือ linked list</p>
+  <div class="note key"><b>คิดเป็น "black box":</b> รู้ปุ่มที่กดได้ (operation) และผลที่ได้ พอ — ไม่ต้องเปิดดูข้างใน นี่คือความหมายของคำว่า <b>Abstract</b></div>
+
+  <h3>Generics <code>&lt;E&gt;</code> — เก็บได้ทุกชนิด</h3>
+  <p>ปัญหา: <code>MyStack</code> เดิมเก็บได้แค่ <code>int</code> · Generics ทำให้ระบุชนิดข้อมูลเป็น "พารามิเตอร์" ได้ → class เดียวใช้กับทุกชนิด</p>
+  <div class="note key"><b><code>&lt;E&gt;</code> คือ "ช่องว่าง" สำหรับใส่ชนิดข้อมูล</b> — E เป็นเพียง<b>ตัวแทน (placeholder)</b> เวลาใช้งานจริงเราแทน E ด้วยชนิดที่ต้องการ เช่นเขียน <code>Vector&lt;Integer&gt;</code> = "E กลายเป็น Integer" · รูปแบบทั่วไป: <code>class ชื่อคลาส&lt;E&gt; { ... }</code></div>
+
+  <h4>ตัวอย่าง: กล่อง 3 ใบ คนละชนิด</h4>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">Vector&lt;Integer&gt; x = new Vector&lt;Integer&gt;(); // สร้างกล่อง x ที่ "E = Integer" → เก็บได้แค่จำนวนเต็ม
+x.add(5);                                  // ✅ ใส่ 5 ได้ (5 เป็น Integer)
+
+Vector&lt;Double&gt; y = new Vector&lt;Double&gt;();   // สร้างกล่อง y ที่ "E = Double" → เก็บได้แค่ทศนิยม
+y.add(6.3);                                // ✅ ใส่ 6.3 ได้
+
+Vector&lt;String&gt; z = new Vector&lt;String&gt;();   // สร้างกล่อง z ที่ "E = String" → เก็บได้แค่ข้อความ
+z.add("Hello");                            // ✅ ใส่ "Hello" ได้
+
+// สรุป: x รับได้แค่ Integer, y แค่ Double, z แค่ String</pre></div>
+
+  <h4>✅ ทำได้ vs ❌ ทำไม่ได้ (กล่อง <code>Vector&lt;Integer&gt;</code>)</h4>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">Vector&lt;Integer&gt; x = new Vector&lt;Integer&gt;(); // กล่องนี้ระบุ E = Integer
+
+x.add(5);              // ✅ ทำได้ — 5 เป็น Integer ตรงชนิด
+x.add(10);             // ✅ ทำได้ — 10 เป็น Integer
+x.add("Hello");        // ❌ ทำไม่ได้ — compile error! กล่องนี้ห้ามใส่ String
+x.add(6.3);            // ❌ ทำไม่ได้ — 6.3 เป็น Double ไม่ใช่ Integer
+
+Integer first = x.firstElement(); // ✅ ดึงค่าออกมาเป็น Integer ได้เลย ไม่ต้อง cast
+int n = x.get(0) + 1;             // ✅ เอาไปคำนวณต่อได้ทันที</pre></div>
+  <div class="note ok"><b>ประโยชน์ใหญ่สุด:</b> compiler ตรวจจับ <b>type mismatch ได้ตั้งแต่ก่อนรัน</b> — บรรทัด <code>x.add("Hello")</code> จะ error ตอน <b>compile</b> (ตอนเขียน/แปลโค้ด) ไม่ใช่ตอนโปรแกรมรันแล้วพัง → ปลอดภัยกว่ามาก</div>
+
+  <h3>เขียน MyStack แบบ Generic</h3>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public class MyStack&lt;E&gt; {            // &lt;E&gt; = stack นี้เก็บชนิดอะไรก็ได้
+    private int top = -1;                // ตัวชี้บนสุด เริ่ม -1 (ว่าง)
+    public E[] list;                     // array เก็บข้อมูลชนิด E
+    public MyStack(int size) {           // constructor
+        list = (E[]) new Object[size];   // ⚠️ ต้องสร้างเป็น Object[] แล้ว cast เป็น E[]
+    }
+    public void push(E x) {              // ใส่ค่าชนิด E
+        top++;                           // เลื่อน top ขึ้น
+        list[top] = x;                   // วางค่าบนสุด
+    }
+    public E pop() {                     // เอาค่าบนสุดออก (คืนชนิด E)
+        E tmp = list[top];               // อ่านค่าบนสุด
+        top--;                           // ลด top
+        return tmp;                      // คืนค่า
+    }
+}</pre></div>
+  <div class="note warn"><b>เกร็ดที่ข้อสอบชอบ:</b> เขียน <code>new E[size]</code> ตรงๆ <b>ไม่ได้</b> (Java ไม่ยอม) ต้องสร้างเป็น <code>(E[]) new Object[size]</code> แล้ว cast เอา</div>
+
+  <h4>ข้อจำกัด: ใช้ primitive ตรงๆ ไม่ได้</h4>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">Pair&lt;int, char&gt; p = ...;                        // ❌ ทำไม่ได้ — ห้ามใส่ primitive (int, char) ใน &lt;&gt;
+Pair&lt;Integer, Character&gt; p = ...;               // ✅ ทำได้ — ต้องใช้ wrapper class (Integer แทน int)</pre></div>
+
+  <h3>ADT พร้อมใช้ใน Java (<code>java.util</code>)</h3>
+  <table>
+    <tr><th>ADT</th><th>interface</th><th>class ที่ implement</th></tr>
+    <tr><td>List</td><td><code>List&lt;T&gt;</code></td><td>ArrayList</td></tr>
+    <tr><td>Stack</td><td>—</td><td><code>Stack&lt;T&gt;</code> (push/pop/peek/search)</td></tr>
+    <tr><td>Queue</td><td><code>Queue&lt;T&gt;</code></td><td>LinkedList, ArrayDeque, PriorityQueue</td></tr>
+  </table>
+</section>
+
+<!-- ---------- LESSON 6 ---------- -->
+<section class="panel" id="p-l6">
+  <h2 class="title">Lesson 6 — Efficiency / Big O ⭐⭐</h2>
+  <p class="lead">บทที่สำคัญที่สุด — วิธีวัดว่า "โค้ดเรามีประสิทธิภาพแค่ไหน" โดยไม่ขึ้นกับเครื่อง</p>
+
+  <h3>ทำไมไม่จับเวลาจริง?</h3>
+  <ul>
+    <li>เครื่องคนละเครื่อง → เวลาต่างกัน</li>
+    <li>เครื่องเดียวกันรันหลายครั้ง → ก็ยังต่างกัน</li>
+    <li>algorithm เร็วมากๆ → จับเวลาไม่แม่น</li>
+  </ul>
+  <div class="note key">แทนที่จะจับเวลา เรา<b>นับจำนวน operation เทียบกับขนาดของ input (n)</b> ว่าโตขึ้นแบบไหนเมื่อ n ใหญ่ขึ้น</div>
+
+  <h3>นับ operation → หา Big O</h3>
+  <p>ตัวอย่าง: ฟังก์ชันบวกเลขใน array</p>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public static int sum(int[] array) {          // รับ array บวกผลรวมทุกตัว
+    int sum = 0;                              // 1 assignment (ทำครั้งเดียว)
+    for (int i = 0; i &lt; array.length; i++) {  // i=0 (1 ครั้ง) + เทียบ n ครั้ง + i++ n ครั้ง
+        sum = sum + array[i];                 // บวก + assign → ทำ n ครั้ง (ตามขนาด array)
+    }
+    return sum;                               // คืนผลรวม
+}
+// นับรวม ≈ 4n + 2 operation → ตัดค่าคงที่/พจน์เล็ก → Big O = O(n)</pre></div>
+
+  <h4>กฎลัด (Tricks)</h4>
+  <table>
+    <tr><th>กฎ</th><th>ตัวอย่าง</th></tr>
+    <tr><td>ค่าคงที่ไม่สำคัญ</td><td>O(2n) → O(n), O(500) → O(1)</td></tr>
+    <tr><td>พจน์เล็กไม่สำคัญ</td><td>O(n²+n+5) → O(n²)</td></tr>
+    <tr><td>arithmetic / assign / เข้าถึง array</td><td>= O(1)</td></tr>
+    <tr><td>loop</td><td>= ความยาว loop × งานข้างใน</td></tr>
+  </table>
+
+  <h3>ตารางวิเคราะห์รูปแบบ loop (ออกสอบบ่อย)</h3>
+  <table>
+    <tr><th>โค้ด</th><th>จำนวนครั้ง</th><th>Big O</th></tr>
+    <tr><td><code>return n*(n+1)/2;</code></td><td>คงที่</td><td>O(1)</td></tr>
+    <tr><td>loop เดียว <code>i++</code></td><td>n</td><td>O(n)</td></tr>
+    <tr><td>loop ซ้อน loop</td><td>n²</td><td>O(n²)</td></tr>
+    <tr><td><code>for(i=1; i&lt;n; i=i*2)</code></td><td>log₂n</td><td>O(log n)</td></tr>
+    <tr><td><code>for(i=0; i&lt;n; i+=2)</code></td><td>n/2</td><td>O(n)</td></tr>
+    <tr><td>loop ซ้อน <code>j&lt;=i</code></td><td>n(n+1)/2</td><td>O(n²)</td></tr>
+  </table>
+
+  <h3>นิยามทางการ (พิสูจน์ในข้อสอบ)</h3>
+  <p>ทั้งสามนิยามด้วยการหาค่าคงที่ <code>c</code> และจุดเริ่ม <code>n₀</code>:</p>
+  <ul>
+    <li><b>O (ขอบบน):</b> <code>0 ≤ f(n) ≤ c·g(n)</code> สำหรับทุก n ≥ n₀</li>
+    <li><b>Ω (ขอบล่าง):</b> <code>0 ≤ c·g(n) ≤ f(n)</code></li>
+    <li><b>Θ (บน+ล่าง):</b> <code>c₁·g(n) ≤ f(n) ≤ c₂·g(n)</code> (ใช้ 2 ค่าคงที่)</li>
+  </ul>
+  <div class="note"><b>ตัวอย่างพิสูจน์:</b> f(n)=4n+2 เป็น O(n) → เลือก c=6 จะได้ <code>4n+2 ≤ 6n</code> จริงตั้งแต่ n=1 (6≤6 ✓, n=2: 10≤12 ✓) </div>
+
+  <h3>กราฟเปรียบเทียบ — ลองเลื่อนดู n ใหญ่ขึ้น</h3>
+  <div class="demo">
+    <div class="ctrl">
+      <label class="sl">ขนาด input (n) สูงสุด: <span id="bo-nval">30</span></label>
+      <input type="range" id="bo-n" min="5" max="60" value="30" style="width:220px" oninput="BigO.draw()">
+    </div>
+    <canvas id="bo-canvas" width="900" height="380"></canvas>
+    <div class="hint">เส้นยิ่งพุ่งชันเร็ว = ยิ่งแย่ · สังเกต O(2ⁿ) และ O(n!) พุ่งทะลุเพดานเร็วมากแม้ n น้อย</div>
+  </div>
+
+  <h3>ลำดับความเร็ว (ดี → แย่)</h3>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:15px;background:#eef4fc;padding:12px 16px;border-radius:10px">O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(n³) &lt; O(2ⁿ) &lt; O(n!)</p>
+  <div class="note key">🔑 ข้อคิดสำคัญ: <code>addUpTo</code> แบบ loop กับแบบสูตร <code>n*(n+1)/2</code> ให้<b>ผลเท่ากัน</b> แต่ประสิทธิภาพต่างกันมหาศาล (O(n) vs O(1)) → <b>ผลถูก ≠ มีประสิทธิภาพ</b></div>
+</section>
+
+<!-- ---------- LESSON 7 ---------- -->
+<section class="panel" id="p-l7">
+  <h2 class="title">Lesson 7 — Recursion ⭐</h2>
+  <p class="lead">ฟังก์ชันที่เรียกตัวเอง เพื่อแก้ปัญหาเวอร์ชันที่เล็กลงเรื่อยๆ</p>
+
+  <h3>3 องค์ประกอบที่ขาดไม่ได้</h3>
+  <ol>
+    <li><b>Base Case</b> — เงื่อนไขหยุด (ถ้าไม่มี → วนไม่จบ → stack overflow)</li>
+    <li><b>Recursive Case</b> — เรียกตัวเองด้วย input ที่<b>เล็กลง</b></li>
+    <li><b>Progress</b> — แต่ละครั้งต้องขยับเข้าใกล้ base case</li>
+  </ol>
+
+  <h3>ตัวอย่าง: factorial — ดู call stack ทำงาน</h3>
+  <p>n! = n × (n−1) × … × 1 · กดดูว่าฟังก์ชันเรียกตัวเองลงไปจนถึง base case แล้วค่อย "คลายค่า" กลับขึ้นมา</p>
+  <div class="demo" id="d-fact">
+    <div class="ctrl">
+      <label class="sl">factorial(<input type="number" id="fac-n" value="4" min="0" max="9" style="width:60px">)</label>
+      <button class="btn sm" onclick="Fact.run()">▶ รัน (ดู call stack)</button>
+    </div>
+    <div class="stage" id="fac-stage" style="display:block"></div>
+    <div class="hint">🔵 ฟ้า = กำลังเรียกลงไป · 🟠 ส้ม = ถึง base case · 🟢 เขียว = คืนค่ากลับขึ้นมา</div>
+  </div>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public static int factorial(int n) {     // หา n! = n × (n-1) × ... × 1
+    if (n == 0 || n == 1) return 1;       // Base case: หยุดเมื่อถึง 0 หรือ 1 (คืน 1)
+    return n * factorial(n - 1);          // Recursive case: n คูณผลของ factorial ตัวเล็กกว่า
+}</pre></div>
+
+  <h3>Fibonacci — ทำไมช้า O(2ⁿ)</h3>
+  <p>F(n) = F(n−1) + F(n−2) · เรียกตัวเอง <b>2 ครั้ง</b> ทุกชั้น → จำนวนการเรียกโตเป็น 2 เท่าทุกชั้น (binary tree) และ<b>คำนวณค่าซ้ำ</b>เยอะมาก</p>
+  <div class="demo" id="d-fib">
+    <div class="ctrl">
+      <label class="sl">fib(<input type="number" id="fib-n" value="6" min="1" max="12" style="width:60px">)</label>
+      <button class="btn sm" onclick="Fib.run()">นับจำนวนการเรียก</button>
+    </div>
+    <div class="stage" id="fib-stage" style="display:block"></div>
+    <div class="hint">เปรียบเทียบ recursion ธรรมดา vs แบบมีความจำ (memoization) — เกริ่นนำสู่ Lesson 8</div>
+  </div>
+
+  <h3>อ่าน recursion ยังไง</h3>
+  <div class="note">"บนลงล่าง เริ่ม main ก่อน" → เรียกลงลึกจนถึง base case แล้วค่อย<b>คลายค่ากลับ (unrolling)</b> ทีละชั้น เช่น sum(5,10) = 10+9+8+7+6+5 = 45</div>
+  <div class="play" data-seed="recursion"></div>
+</section>
+
+<!-- ---------- HANOI ---------- -->
+<section class="panel" id="p-hanoi">
+  <h2 class="title">Tower of Hanoi 🗼</h2>
+  <p class="lead">ปริศนาคลาสสิก — ตัวอย่างที่สวยงามของ recursion และ O(2ⁿ)</p>
+
+  <h3>กติกา</h3>
+  <ol>
+    <li>ย้ายได้ทีละ 1 แผ่น</li>
+    <li>ย้ายได้เฉพาะแผ่นบนสุดของเสา</li>
+    <li>ห้ามวางแผ่นใหญ่ทับแผ่นเล็ก</li>
+  </ol>
+
+  <h3>หัวใจ (Recursive Insight)</h3>
+  <p>ย้าย N แผ่นจาก A → C:</p>
+  <ol>
+    <li>ย้าย N−1 แผ่นบน A → B (ใช้ C เป็นตัวช่วย)</li>
+    <li>ย้ายแผ่นใหญ่สุด A → C</li>
+    <li>ย้าย N−1 แผ่น B → C (ใช้ A เป็นตัวช่วย)</li>
+  </ol>
+
+  <div class="demo" id="d-hanoi">
+    <div class="ctrl">
+      <label class="sl">จำนวนแผ่น: <span id="ha-nval">3</span></label>
+      <input type="range" id="ha-n" min="1" max="7" value="3" style="width:160px" oninput="Hanoi.reset()">
+      <button class="btn sm" onclick="Hanoi.play()">▶ เล่นอัตโนมัติ</button>
+      <button class="btn sm sec" onclick="Hanoi.reset()">รีเซ็ต</button>
+      <span class="sl" style="margin-left:auto">ย้ายแล้ว <b id="ha-moves">0</b> / <b id="ha-total">7</b> ครั้ง</span>
+    </div>
+    <canvas id="ha-canvas" width="900" height="240"></canvas>
+    <div class="hint" id="ha-msg">N แผ่นใช้ 2ᴺ − 1 ครั้งเสมอ (3 แผ่น = 7, 4 = 15, 10 = 1023)</div>
+  </div>
+
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">// n=จำนวนแผ่น, from=เสาต้นทาง, temp=เสาตัวช่วย, to=เสาปลายทาง
+public static void solve(int n, char from, char temp, char to) {
+    if (n == 1) {                                 // Base case: เหลือแผ่นเดียว
+        System.out.println(from + " → " + to);    //   ย้ายตรงไปปลายทางเลย
+        return;
+    }
+    solve(n - 1, from, to, temp);                 // ขั้น 1: ย้าย n-1 แผ่นบนไปพักที่ temp
+    System.out.println(from + " → " + to);        // ขั้น 2: ย้ายแผ่นใหญ่สุดไปปลายทาง
+    solve(n - 1, temp, from, to);                 // ขั้น 3: ย้าย n-1 แผ่นจาก temp ไปปลายทาง
+}</pre></div>
+
+  <div class="note bad"><b>O(2ⁿ) — เติบโตน่ากลัว:</b> 64 แผ่น (ตำนานพระย้ายจาน) = 18.4 ล้านล้านล้านครั้ง ≈ 585,000 ล้านปี · บทเรียน: โค้ดสวย ≠ เร็ว · เขียนแบบ iterative ก็ไม่ได้เร็วขึ้น แค่ยาวและอ่านยากกว่า</div>
+</section>
+
+<!-- ---------- LESSON 8 ---------- -->
+<section class="panel" id="p-l8">
+  <h2 class="title">Lesson 8 — Dynamic Programming ⭐⭐</h2>
+  <p class="lead">"แก้ครั้งเดียว เก็บไว้ ใช้ซ้ำ" — เทคนิคเร่งความเร็วโดยไม่คำนวณซ้ำ</p>
+
+  <div class="note key"><b>DP = Recursion + Memory</b> · ใช้เมื่อ: (1) มีปัญหาย่อยซ้ำกัน (2) สร้างคำตอบจากคำตอบย่อยได้ (3) recursion ถูกแต่ช้า</div>
+
+  <h3>2 แนวทาง</h3>
+  <table>
+    <tr><th></th><th>Top-Down (Memoization)</th><th>Bottom-Up (Tabulation)</th></tr>
+    <tr><td>วิธี</td><td>recursion ปกติ + cache เก็บผล</td><td>เริ่มจากเล็กสุด ไล่สร้างขึ้นด้วย loop</td></tr>
+    <tr><td>ถ้าเคยคำนวณแล้ว</td><td>คืนค่าจาก cache ทันที</td><td>อยู่ในตาราง dp[] อยู่แล้ว</td></tr>
+  </table>
+
+  <h3>1) Fibonacci — recursion vs DP</h3>
+  <div class="demo" id="d-dpfib">
+    <div class="ctrl">
+      <label class="sl">fib(<input type="number" id="dpfib-n" value="8" min="1" max="40" style="width:60px">)</label>
+      <button class="btn sm" onclick="DPFib.run()">เทียบจำนวนการคำนวณ</button>
+    </div>
+    <div class="stage" id="dpfib-stage" style="display:block"></div>
+  </div>
+  <p>Bottom-up เติมตารางจากซ้ายไปขวา แต่ละช่อง = ผลบวกของ 2 ช่องก่อนหน้า:</p>
+  <div class="demo" id="d-dptable">
+    <div class="ctrl"><button class="btn sm" onclick="DPTable.run()">▶ เติมตาราง dp[] ทีละช่อง</button></div>
+    <div class="stage" id="dptable-stage" style="display:block"></div>
+  </div>
+  <table>
+    <tr><th>วิธี</th><th>Time Complexity</th></tr>
+    <tr><td>Recursion ธรรมดา</td><td>O(2ⁿ)</td></tr>
+    <tr><td>Top-down / Bottom-up DP</td><td>O(n)</td></tr>
+  </table>
+
+  <h3>2) Minimum Coin Change</h3>
+  <p>มีเหรียญหลายชนิด ต้องการจ่ายยอดหนึ่งด้วย<b>จำนวนเหรียญน้อยที่สุด</b></p>
+  <p><b>State:</b> <code>dp[a]</code> = จำนวนเหรียญน้อยสุดสำหรับยอด a · <b>Transition:</b> <code>dp[a] = min(dp[a], dp[a-coin] + 1)</code></p>
+  <div class="demo" id="d-coin">
+    <div class="ctrl">
+      <label class="sl">เหรียญ:</label><input type="text" id="coin-c" value="1,3,4" style="width:100px">
+      <label class="sl">ยอด:</label><input type="number" id="coin-a" value="6" min="1" max="20" style="width:70px">
+      <button class="btn sm" onclick="Coin.run()">▶ เติมตาราง dp</button>
+    </div>
+    <div class="stage" id="coin-stage" style="display:block"></div>
+    <div class="hint" id="coin-msg">ลองเปลี่ยนเป็นเหรียญ 1,2,5 ยอด 7 → คำตอบ 2 เหรียญ (5+2)</div>
+  </div>
+
+  <h3>3) 0/1 Knapsack — ดูตารางเติมทีละแถว</h3>
+  <p>กระเป๋าจุได้จำกัด แต่ละของมีน้ำหนัก+มูลค่า เลือกของให้<b>มูลค่ารวมสูงสุด</b>โดยไม่เกินความจุ (แต่ละชิ้นเลือกได้ 0 หรือ 1 ครั้ง)</p>
+  <p><b>State:</b> <code>dp[i][c]</code> = มูลค่าสูงสุดใช้ของ i ชิ้นแรก ความจุ c · <b>เลือก take หรือ skip:</b> <code>max(skip = dp[i-1][c], take = value + dp[i-1][c-weight])</code></p>
+  <div class="demo" id="d-knap">
+    <div class="ctrl">
+      <span class="sl">weights=[1,3,4,5] · values=[1,4,5,7] · capacity=7</span>
+      <button class="btn sm" onclick="Knap.run()">▶ เติมตารางทีละแถว</button>
+    </div>
+    <div class="stage" id="knap-stage" style="display:block;overflow-x:auto"></div>
+    <div class="hint" id="knap-msg">คำตอบ = ช่องขวาล่างสุด (dp[4][7] = 9: เลือกของน้ำหนัก 3+4 → มูลค่า 4+5)</div>
+  </div>
+
+  <h3>ขั้นตอนแก้ปัญหา DP (7 ขั้น)</h3>
+  <ol>
+    <li>นิยาม subproblem</li><li>นิยาม DP state</li><li>หา base case</li>
+    <li>เขียน recurrence relation</li><li>เลือก top-down หรือ bottom-up</li>
+    <li>เติม memo / table</li><li>คืนคำตอบ</li>
+  </ol>
+</section>
+
+<!-- ---------- SPACE ---------- -->
+<section class="panel" id="p-space">
+  <h2 class="title">Space Complexity (เสริม)</h2>
+  <p class="lead">สไลด์เน้น Time แต่บอกไว้ว่าวัด 2 อย่าง — นี่คือส่วน "Space" ที่ควรรู้</p>
+  <div class="note"><b>Space complexity</b> = หน่วยความจำที่ algorithm ใช้เพิ่มเทียบกับขนาด input · วัดด้วย Big O เหมือนกัน</div>
+
+  <h3>recursion กิน memory จาก call stack</h3>
+  <p>ทุกครั้งที่เรียกตัวเอง จะมี "frame" ค้างบน call stack จนกว่าจะถึง base case → ลึก n ชั้น = ใช้ O(n) space</p>
+  <table>
+    <tr><th>วิธีหาผลรวม 1..n</th><th>Time</th><th>Space</th></tr>
+    <tr><td>loop (วนปกติ)</td><td>O(n)</td><td><b>O(1)</b> (ใช้ตัวแปรไม่กี่ตัว)</td></tr>
+    <tr><td>recursion</td><td>O(n)</td><td><b>O(n)</b> (frame ค้าง n ชั้น)</td></tr>
+    <tr><td>สูตร n(n+1)/2</td><td>O(1)</td><td>O(1)</td></tr>
+  </table>
+
+  <h3>ตาราง time/space ของแต่ละโครงสร้าง</h3>
+  <table>
+    <tr><th>โครงสร้าง / วิธี</th><th>Access</th><th>Insert/Delete (หัว)</th><th>Space</th></tr>
+    <tr><td>Array</td><td>O(1)</td><td>O(n)</td><td>O(n)</td></tr>
+    <tr><td>Linked List</td><td>O(n)</td><td>O(1)</td><td>O(n)</td></tr>
+    <tr><td>Stack / Queue</td><td>—</td><td>O(1)</td><td>O(n)</td></tr>
+    <tr><td>Fibonacci memoization</td><td colspan="2">Time O(n)</td><td>O(n)</td></tr>
+    <tr><td>Fibonacci 2 ตัวแปร</td><td colspan="2">Time O(n)</td><td><b>O(1)</b></td></tr>
+    <tr><td>Knapsack DP</td><td colspan="2">Time O(n·W)</td><td>O(n·W)</td></tr>
+  </table>
+  <div class="note key"><b>Fibonacci ลด space เหลือ O(1):</b> เพราะแต่ละค่าใช้แค่ 2 ค่าก่อนหน้า ไม่ต้องเก็บ array ทั้งตัว ใช้แค่ 2 ตัวแปรหมุนไปเรื่อยๆ</div>
+  <div class="play" data-seed="space"></div>
+</section>
+
+<!-- ---------- QUIZ ---------- -->
+<section class="panel" id="p-quiz">
+  <h2 class="title">ทบทวน 90% — ถาม/ตอบ</h2>
+  <p class="lead">กดที่การ์ดเพื่อดูเฉลย · ครอบคลุมจุดที่ออกสอบบ่อย</p>
+  <div id="quizbox"></div>
+</section>
+
+<!-- ---------- HOMEWORK ---------- -->
+<section class="panel" id="p-hw">
+  <h2 class="title">📝 เฉลยการบ้าน (Java เต็ม)</h2>
+  <p class="lead">รวมโจทย์/การบ้านที่แทรกอยู่ในสไลด์ทุกบท พร้อมเฉลยโค้ด Java ที่คอมไพล์ได้จริง + คำอธิบาย</p>
+  <div class="note warn"><b>วิธีใช้:</b> ลองคิด/เขียนเองก่อนดูเฉลย · โค้ดทุกอันรันได้บน Java (เช่น IntelliJ, VS Code, replit) · ใต้แต่ละข้อมีปุ่มลองรันเวอร์ชัน JavaScript ที่ตรรกะเหมือนกัน</div>
+
+  <h3>Lesson 1/3 — Homework: Array (ลบไม่ให้เหลือช่องว่าง + คัดลอก array)</h3>
+  <p><b>โจทย์:</b> (1) เขียน method ลบข้อมูลจาก array โดยไม่เหลือช่องว่างตรงกลาง (2) เขียน method คัดลอก array หนึ่งไปอีก array</p>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public class ArrayHomework {
+
+    // (1) ลบสมาชิกที่ตำแหน่ง index แล้วเลื่อนตัวที่อยู่ขวาทั้งหมดมาชิดซ้าย
+    //     เพื่อไม่ให้เกิดช่องว่างตรงกลาง (คืนค่าจำนวนสมาชิกที่เหลือ)
+    public static int removeAt(int[] arr, int size, int index) {
+        if (index &lt; 0 || index &gt;= size) return size;  // กันค่าผิด (index นอกขอบเขต)
+        for (int i = index; i &lt; size - 1; i++) {      // วนตั้งแต่จุดที่ลบ ไปจนเกือบท้าย
+            arr[i] = arr[i + 1];                       // ดึงตัวขวามาทับ (เลื่อนซ้าย 1 ช่อง)
+        }
+        arr[size - 1] = 0;                             // เคลียร์ช่องท้ายสุดที่ซ้ำ
+        return size - 1;                               // คืนขนาดใหม่ (ลดลง 1)
+    }
+
+    // (2) คัดลอกทุกสมาชิกจาก src ไป dest
+    public static void copyArray(int[] src, int[] dest) {
+        for (int i = 0; i &lt; src.length; i++) {        // วนทุก index
+            dest[i] = src[i];                          // ก๊อปค่าทีละช่อง
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] a = {10, 20, 30, 40, 50};                // array ตั้งต้น
+        int size = a.length;                           // ขนาดปัจจุบัน = 5
+        size = removeAt(a, size, 2);                   // ลบ 30 (index 2) → size เหลือ 4
+        for (int i = 0; i &lt; size; i++)                 // วนพิมพ์เฉพาะส่วนที่ยังใช้
+            System.out.print(a[i] + " ");              // ผล: 10 20 40 50
+        System.out.println();
+
+        int[] b = new int[a.length];                   // สร้างกล่องปลายทาง
+        copyArray(a, b);                               // ก๊อป a → b
+        System.out.println("b[3] = " + b[3]);          // 50
+    }
+}</pre></div>
+  <div class="note"><b>ทำไมต้องเลื่อน:</b> ถ้าแค่เซ็ตช่องนั้นเป็น 0 จะเกิด "รู" กลาง array · การเลื่อนทำให้ข้อมูลชิดกันเสมอ — และนี่คือเหตุผลที่ insert/delete ของ Array เป็น O(n) (ต้องเลื่อนเฉลี่ยครึ่งหนึ่ง)</div>
+  <div class="play" data-seed="hw-array"></div>
+
+  <h3>Lesson 2 — Homework: ปรับปรุง MyStack ให้ปลอดภัย</h3>
+  <p><b>โจทย์ในสไลด์:</b> จะเกิดอะไรเมื่อ pop stack ว่าง? เมื่อ stack เต็ม? และจะดูค่า top อย่างไร?</p>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public class MyStack {
+    private int top = -1;                     // ตัวชี้บนสุด (-1 = ว่าง)
+    private int[] list;                        // array เก็บข้อมูล
+
+    public MyStack(int size) {                 // constructor กำหนดขนาด
+        list = new int[size];
+    }
+
+    public boolean isEmpty() { return top == -1; }              // ว่างไหม
+    public boolean isFull()  { return top == list.length - 1; } // เต็มไหม
+    public int size()        { return top + 1; }                // มีกี่ตัว
+
+    public void push(int x) {                  // ใส่ค่า (เวอร์ชันกันพลาด)
+        if (isFull()) {                        // ถ้าเต็มแล้ว
+            System.out.println("Stack เต็ม! push(" + x + ") ไม่ได้");
+            return;                            // ออกเลย ไม่ใส่
+        }
+        top = top + 1;                         // เลื่อน top ขึ้น
+        list[top] = x;                         // วางค่า
+    }
+
+    public int pop() {                         // เอาออก (เวอร์ชันกันพลาด)
+        if (isEmpty()) {                       // ถ้าว่าง
+            System.out.println("Stack ว่าง! pop ไม่ได้");
+            return -1;                         // คืน -1 เป็นสัญญาณว่าผิดพลาด
+        }
+        int x = list[top];                     // อ่านค่าบนสุด
+        top = top - 1;                         // ลด top
+        return x;                              // คืนค่า
+    }
+
+    public int peek() {                        // ดูค่า top โดยไม่เอาออก
+        if (isEmpty()) return -1;              // ว่าง → -1
+        return list[top];                      // คืนค่าบนสุด (ไม่ลด top)
+    }
+
+    public static void main(String[] args) {
+        MyStack s = new MyStack(3);            // stack จุ 3
+        s.push(5); s.push(3); s.push(4);       // ใส่ 5,3,4 (เต็มพอดี)
+        s.push(9);                             // เต็มแล้ว → พิมพ์เตือน ไม่ใส่
+        System.out.println("top = " + s.peek());    // 4 (ดูเฉยๆ)
+        System.out.println("pop = " + s.pop());      // 4 (เอาออกจริง)
+        System.out.println("size = " + s.size());    // 2 (เหลือ 5,3)
+    }
+}</pre></div>
+
+  <h3>Lesson 2 — ตรวจวงเล็บสมดุล (เวอร์ชันโค้ดเต็ม)</h3>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">import java.util.Stack;                          // ใช้ Stack สำเร็จรูปของ Java
+
+public class BalancedBrackets {
+    public static boolean isBalanced(String expr) {  // คืน true ถ้าวงเล็บสมดุล
+        Stack&lt;Character&gt; stack = new Stack&lt;&gt;();    // stack เก็บวงเล็บเปิด
+        for (char ch : expr.toCharArray()) {       // ไล่อ่านทีละตัวอักษร
+            if (ch == '(') {                       // เจอวงเล็บเปิด
+                stack.push(ch);                    //   → push เก็บไว้
+            } else if (ch == ')') {                // เจอวงเล็บปิด
+                if (stack.isEmpty()) return false; //   ไม่มีตัวเปิดคู่ = ปิดเกิน → ไม่สมดุล
+                stack.pop();                       //   มีคู่ → pop จับคู่ออก
+            }
+        }
+        return stack.isEmpty();                    // จบแล้วว่าง=สมดุล / เหลือค้าง=ไม่สมดุล
+    }
+    public static void main(String[] args) {
+        System.out.println(isBalanced("((A*2)+(3+4))"));  // true  (ครบคู่)
+        System.out.println(isBalanced("((A*2))+...))"));  // false (ปิดเกิน)
+    }
+}</pre></div>
+
+  <h3>Lesson 4 — Review: LinkedList ครบทุก method</h3>
+  <p><b>โจทย์:</b> เขียน removeFirst, printAll (ทั้ง loop และ recursion), getSize, getLast และ addLast (แบบ Tailed)</p>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">class Node {
+    int element;                                // ข้อมูล
+    Node next;                                  // ตัวชี้ตัวถัดไป
+    public Node(int data) { this.element = data; }  // constructor
+}
+
+public class LinkedList {
+    Node head;                                  // ตัวชี้หัว
+    Node tail;                                  // Tailed: เก็บตัวท้ายไว้ด้วย
+
+    public LinkedList(int element) {            // สร้าง list พร้อม node แรก
+        head = new Node(element);               // node แรก
+        head.next = null;                       // ยังไม่มีตัวถัดไป
+        tail = head;                            // มีตัวเดียว หัว=ท้าย
+    }
+
+    // เพิ่มที่หัว
+    public void addFirst(int element) {
+        Node temp = new Node(element);          // สร้างตัวใหม่
+        temp.next = head;                       // ให้ชี้หัวเดิม
+        head = temp;                            // เลื่อนหัวมาตัวใหม่
+    }
+
+    // เพิ่มที่ท้าย — O(1) เพราะมี tail (ไม่ต้องเดินหา)
+    public void addLast(int element) {
+        Node temp = new Node(element);          // สร้างตัวใหม่
+        tail.next = temp;                       // ต่อท้ายตัวเดิม
+        tail = temp;                            // เลื่อนท้ายมาตัวใหม่
+    }
+
+    // ลบตัวหัว
+    public void removeFirst() {
+        if (head == null) return;               // ว่างอยู่ ไม่ต้องทำ
+        head = head.next;                       // ข้ามไปตัว 2 (ตัวเก่ากลายเป็น garbage)
+    }
+
+    // พิมพ์ทั้งหมด — แบบ loop
+    public void printAll() {
+        Node current = head;                    // เริ่มที่หัว
+        while (current != null) {                // วนจนหมด
+            System.out.print(current.element + " ");  // พิมพ์ค่า
+            current = current.next;              // ไปตัวถัดไป
+        }
+        System.out.println();                   // ขึ้นบรรทัดใหม่
+    }
+
+    // พิมพ์ทั้งหมด — แบบ recursion
+    public void printElement(Node x) {
+        if (x == null) return;                  // base case: ถึง null = จบ
+        System.out.print(x.element + " ");      // พิมพ์ตัวปัจจุบัน
+        printElement(x.next);                   // recursive case: เรียกตัวถัดไป
+    }
+
+    // นับจำนวน node
+    public int getSize() {
+        Node current = head;                    // เริ่มหัว
+        int count = 0;                          // ตัวนับ
+        while (current != null) {                // เดินทั้ง list
+            count++;                            // นับเพิ่ม
+            current = current.next;             // ไปตัวถัดไป
+        }
+        return count;                           // คืนจำนวน
+    }
+
+    // หาค่าตัวสุดท้าย
+    public int getLast() {
+        Node current = head;                    // เริ่มหัว
+        while (current.next != null)             // หยุดเมื่อตัวถัดไป=null
+            current = current.next;             // เดินต่อ
+        return current.element;                 // คืนค่าตัวท้าย
+    }
+
+    public static void main(String[] args) {
+        LinkedList l = new LinkedList(5);
+        l.addFirst(8); l.addFirst(9); l.addFirst(2); l.addFirst(6);  // เพิ่มที่หัวทีละตัว
+        l.printElement(l.head);                 // พิมพ์แบบ recursion → 6 2 9 8 5
+        l.removeFirst();                        // ลบหัว (6) ออก
+        l.printAll();                           // พิมพ์แบบ loop → 2 9 8 5
+        System.out.println("size = " + l.getSize());  // 4
+        System.out.println("last = " + l.getLast());  // 5
+    }
+}</pre></div>
+  <div class="play" data-seed="hw-ll"></div>
+
+  <h3>Lesson 7 — Recursion: forgetMeNot + Fibonacci + Summation</h3>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public class RecursionHomework {
+
+    // พิมพ์ "I Miss You" n ครั้ง (โจทย์ GreetingCard)
+    public static void forgetMeNot(int n) {
+        if (n != 0) {                           // base case: n == 0 หยุด
+            System.out.println("I Miss You");
+            forgetMeNot(n - 1);                 // recursive call
+        }
+    }
+
+    // ผลรวม start..end
+    public static int sum(int start, int end) {
+        if (end &lt;= start) return end;           // base case: ถึงตัวเริ่ม คืนค่านั้น
+        return end + sum(start, end - 1);       // recursive case: end + ผลรวมที่เหลือ
+    }
+
+    // Fibonacci
+    public static int fib(int num) {
+        if (num == 0) return 0;                 // base case ตัวที่ 1
+        if (num == 1) return 1;                 // base case ตัวที่ 2
+        return fib(num - 1) + fib(num - 2);     // เรียกตัวเอง 2 ครั้ง → O(2^n)
+    }
+
+    public static void main(String[] args) {
+        forgetMeNot(3);                         // พิมพ์ "I Miss You" 3 ครั้ง
+        System.out.println("Love, Me");
+        System.out.println("sum(5,10) = " + sum(5, 10));   // 45 (10+9+8+7+6+5)
+        System.out.println("fib(7) = " + fib(7));          // 13
+    }
+}</pre></div>
+
+  <h3>Tower of Hanoi — เฉลยเต็ม</h3>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public class TowerOfHanoi {
+    public static void solve(int n, char from, char temp, char to) {
+        if (n == 1) {                                       // base case: เหลือแผ่นเดียว
+            System.out.println("Move disk 1: " + from + " → " + to);  // ย้ายตรงไปเลย
+            return;
+        }
+        solve(n - 1, from, to, temp);                       // 1) ย้าย n-1 แผ่นบนไปพักที่ temp
+        System.out.println("Move disk " + n + ": " + from + " → " + to); // 2) ย้ายแผ่นใหญ่สุดไป to
+        solve(n - 1, temp, from, to);                       // 3) ย้าย n-1 แผ่นจาก temp ไป to
+    }
+    public static void main(String[] args) {
+        solve(3, 'A', 'B', 'C');                            // 3 แผ่น → 7 ครั้ง (2³−1)
+    }
+}</pre></div>
+
+  <h3>Lesson 8 — DP: Coin Change & Knapsack (bottom-up)</h3>
+  <p><b>กิจกรรมในสไลด์:</b> coins=[1,2,5] amount=7 → เฉลย 2 เหรียญ (5+2)</p>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">import java.util.Arrays;
+
+public class DPHomework {
+
+    // จำนวนเหรียญน้อยสุด (คืน -1 ถ้าจ่ายไม่ได้)
+    public static int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];         // dp[a] = เหรียญน้อยสุดสำหรับยอด a
+        Arrays.fill(dp, amount + 1);            // เติม "อนันต์" (amount+1 = มากเกินจริง)
+        dp[0] = 0;                              // ยอด 0 ใช้ 0 เหรียญ (base case)
+        for (int i = 1; i &lt;= amount; i++)        // ไล่ทุกยอดตั้งแต่ 1 ถึง amount
+            for (int coin : coins)               // ลองทุกชนิดเหรียญ
+                if (coin &lt;= i)                    // ใช้เหรียญนี้ได้ถ้าไม่เกินยอด
+                    dp[i] = Math.min(dp[i], dp[i - coin] + 1);  // เลือกที่น้อยกว่า (ใช้เหรียญนี้ +1)
+        return dp[amount] &gt; amount ? -1 : dp[amount];  // ยังเป็นอนันต์ = จ่ายไม่ได้ → -1
+    }
+
+    // 0/1 Knapsack — มูลค่าสูงสุด
+    public static int knapsack(int[] w, int[] v, int capacity) {
+        int n = w.length;                       // จำนวนของ
+        int[][] dp = new int[n + 1][capacity + 1];  // dp[i][c]=มูลค่าสูงสุด i ชิ้นแรก จุ c
+        for (int i = 1; i &lt;= n; i++)             // ไล่ทีละชิ้น
+            for (int c = 1; c &lt;= capacity; c++) {        // ไล่ทุกความจุ
+                if (w[i - 1] &gt; c) dp[i][c] = dp[i - 1][c];           // หนักเกิน → skip (ใช้ค่าแถวบน)
+                else dp[i][c] = Math.max(dp[i - 1][c],               // เทียบ: ไม่เอาชิ้นนี้ (skip)
+                                v[i - 1] + dp[i - 1][c - w[i - 1]]); // กับ: เอาชิ้นนี้ (take)
+            }
+        return dp[n][capacity];                 // คำตอบอยู่ช่องขวาล่างสุด
+    }
+
+    public static void main(String[] args) {
+        System.out.println(coinChange(new int[]{1,2,5}, 7));   // 2 (5+2)
+        System.out.println(coinChange(new int[]{1,3,4}, 6));   // 2 (3+3)
+        System.out.println(knapsack(new int[]{1,3,4,5},
+                                    new int[]{1,4,5,7}, 7));   // 9 (ของน้ำหนัก 3+4)
+    }
+}</pre></div>
+  <div class="play" data-seed="hw-dp"></div>
+
+  <h3>Lesson 6 — Big O ของโจทย์ในสไลด์ (เฉลย)</h3>
+  <table>
+    <tr><th>โค้ด</th><th>นับครั้ง</th><th>Big O</th></tr>
+    <tr><td><code>addUpTo_1</code> (loop)</td><td>4n+2</td><td>O(n)</td></tr>
+    <tr><td><code>addUpTo_2</code> = <code>n*(n+1)/2</code></td><td>3</td><td>O(1)</td></tr>
+    <tr><td><code>test_1</code> (<code>Math.max(n,5)</code>)</td><td>~4n</td><td>O(n)</td></tr>
+    <tr><td><code>test_2</code> (<code>Math.min(n,5)</code>)</td><td>≤17</td><td>O(1)</td></tr>
+    <tr><td>nested loop <code>j&lt;n</code></td><td>n²</td><td>O(n²)</td></tr>
+    <tr><td><code>i = i*2</code></td><td>log₂n+1</td><td>O(log n)</td></tr>
+    <tr><td><code>i += 2</code></td><td>n/2</td><td>O(n)</td></tr>
+    <tr><td>nested <code>j&lt;=i</code></td><td>n(n+1)/2</td><td>O(n²)</td></tr>
+    <tr><td><code>nFactorial</code> (loop+recursion)</td><td>n!</td><td>O(n!)</td></tr>
+  </table>
+</section>
+
+</div><!-- /#panels -->
+
+<footer>
+  สร้างเพื่อทบทวนวิชา Data Structures & Algorithms (DII 2026) · เปิดออฟไลน์ได้ · โค้ด Java ไว้สอบ + JS รันได้จริง<br>
+  หากต้องอินเทอร์เน็ตเพื่อโหลดฟอนต์เท่านั้น — เนื้อหาและโค้ดทำงานได้แม้ออฟไลน์
+</footer>
+
+<script>
+/* ============ NAV ============ */
+const panelsHTML = document.getElementById('panels');
+document.getElementById('content').appendChild(panelsHTML);
+panelsHTML.style.display='block';
+function go(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+  document.getElementById('p-'+id).classList.add('show');
+  document.querySelectorAll('#side a').forEach(a=>a.classList.toggle('active', a.dataset.go===id));
+  document.getElementById('side').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('#side a').forEach(a=>a.onclick=()=>go(a.dataset.go));
+
+/* ============ syntax highlight (Java/JS) ============ */
+(function(){
+  const lett=i=>{let s='';i++;while(i>0){s=String.fromCharCode(97+(i-1)%26)+s;i=Math.floor((i-1)/26);}return s;};
+  function highlight(code){
+    const stash=[];
+    const KEEP=html=>{stash.push(html);return '«~'+lett(stash.length-1)+'»';};
+    code=code.replace(/\/\/[^\n]*/g, m=>KEEP('<span class="tok-com">'+m+'</span>'));
+    code=code.replace(/&quot;[^&]*?&quot;|"[^"]*"|'[^']*'/g, m=>KEEP('<span class="tok-str">'+m+'</span>'));
+    code=code.replace(/\b(Node|LinkedList|MyStack|Vector|Integer|Double|Character|Object|Pair|Queue|Stack|Arrays)\b/g,'«T»$1«E»');
+    code=code.replace(/\b(public|private|protected|static|void|class|return|if|else|for|while|new|int|double|char|boolean|String|null|true|false|this|import|package|let|const|var|function|of|in)\b/g,'«K»$1«E»');
+    code=code.replace(/\b(\d+)\b/g,'«N»$1«E»');
+    code=code.replace(/«~([a-z]+)»/g,(m,t)=>{let i=0;for(const c of t)i=i*26+(c.charCodeAt(0)-96);return stash[i-1];});
+    return code.replace(/«K»/g,'<span class="tok-kw">').replace(/«T»/g,'<span class="tok-type">').replace(/«N»/g,'<span class="tok-num">').replace(/«E»/g,'</span>');
+  }
+  document.querySelectorAll('pre.java, pre.js').forEach(pre=>{ pre.innerHTML=highlight(pre.innerHTML); });
+})();
+
+/* ============ PLAYGROUNDS ============ */
+const seeds={
+ bracket:{title:'ตรวจวงเล็บสมดุลด้วย Stack',code:
+`function isBalanced(s){
+  let stack = [];
+  for (let ch of s){
+    if (ch === '(') stack.push(ch);
+    else if (ch === ')'){
+      if (stack.length === 0) return false; // ปิดเกิน
+      stack.pop();
+    }
+  }
+  return stack.length === 0; // เหลือค้าง = ไม่สมดุล
+}
+console.log("((A+B)+C) =>", isBalanced("((A+B)+C)"));
+console.log("((A))) =>", isBalanced("((A)))"));`},
+ ll:{title:'Linked List แบบ addFirst (รันได้)',code:
+`class Node{ constructor(v){ this.element=v; this.next=null; } }
+class LinkedList{
+  constructor(v){ this.head=new Node(v); }
+  addFirst(v){ let t=new Node(v); t.next=this.head; this.head=t; }
+  printAll(){ let c=this.head, out=[]; while(c){ out.push(c.element); c=c.next; } return out.join(" -> ")+" -> null"; }
+}
+let l=new LinkedList(5);
+l.addFirst(8); l.addFirst(9); l.addFirst(2);
+console.log(l.printAll());`},
+ lltraverse:{title:'เดินทั่ว list: นับจำนวน + หาตัวสุดท้าย',code:
+`class Node{ constructor(v){ this.element=v; this.next=null; } }
+let head=new Node(6);
+head.next=new Node(2); head.next.next=new Node(9); head.next.next.next=new Node(5);
+
+let count=0, c=head, last=null;
+while(c!==null){ count++; last=c.element; c=c.next; }
+console.log("จำนวน node =", count);
+console.log("ตัวสุดท้าย =", last);`},
+ recursion:{title:'Summation แบบ recursion (unrolling)',code:
+`function sum(start, end){
+  if (end <= start) return end;        // base case
+  return end + sum(start, end-1);      // recursive case
+}
+console.log("sum(5,10) =", sum(5,10)); // 10+9+8+7+6+5
+
+function factorial(n){
+  if (n<=1) return 1;
+  return n * factorial(n-1);
+}
+console.log("factorial(5) =", factorial(5));`},
+ space:{title:'Fibonacci ที่ใช้ space แค่ O(1)',code:
+`function fibO1(n){
+  if (n===0) return 0;
+  let a=0, b=1;            // เก็บแค่ 2 ค่าก่อนหน้า
+  for (let i=2; i<=n; i++){ let t=a+b; a=b; b=t; }
+  return b;
+}
+for (let i=0;i<=10;i++) console.log("fib("+i+") =", fibO1(i));`},
+ 'hw-array':{title:'ลบ array ไม่ให้เหลือช่องว่าง + คัดลอก',code:
+`function removeAt(arr, size, index){
+  for (let i=index; i<size-1; i++) arr[i]=arr[i+1]; // เลื่อนซ้าย
+  arr[size-1]=0;
+  return size-1;
+}
+let a=[10,20,30,40,50], size=a.length;
+size=removeAt(a,size,2);           // ลบ 30
+console.log("หลังลบ:", a.slice(0,size).join(" "));  // 10 20 40 50
+
+let b=new Array(a.length).fill(0);
+for (let i=0;i<a.length;i++) b[i]=a[i];   // copyArray
+console.log("b =", b.join(" "));`},
+ 'hw-ll':{title:'LinkedList ครบ method (Lesson 4)',code:
+`class Node{ constructor(v){ this.element=v; this.next=null; } }
+class LinkedList{
+  constructor(v){ this.head=new Node(v); this.tail=this.head; }
+  addFirst(v){ let t=new Node(v); t.next=this.head; this.head=t; }
+  addLast(v){ let t=new Node(v); this.tail.next=t; this.tail=t; }
+  removeFirst(){ if(this.head) this.head=this.head.next; }
+  getSize(){ let c=this.head,n=0; while(c){ n++; c=c.next; } return n; }
+  getLast(){ let c=this.head; while(c.next) c=c.next; return c.element; }
+  printAll(){ let c=this.head,o=[]; while(c){ o.push(c.element); c=c.next; } return o.join(" "); }
+}
+let l=new LinkedList(5);
+l.addFirst(8); l.addFirst(9); l.addLast(7);
+console.log("list :", l.printAll());     // 9 8 5 7
+l.removeFirst();
+console.log("หลัง removeFirst:", l.printAll()); // 8 5 7
+console.log("size =", l.getSize(), "| last =", l.getLast());`},
+ 'hw-dp':{title:'Coin Change + Knapsack (Lesson 8)',code:
+`function coinChange(coins, amount){
+  let dp=new Array(amount+1).fill(amount+1);
+  dp[0]=0;
+  for (let i=1;i<=amount;i++)
+    for (let coin of coins)
+      if (coin<=i) dp[i]=Math.min(dp[i], dp[i-coin]+1);
+  return dp[amount]>amount ? -1 : dp[amount];
+}
+function knapsack(w,v,cap){
+  let n=w.length, dp=Array.from({length:n+1},()=>new Array(cap+1).fill(0));
+  for (let i=1;i<=n;i++) for (let c=1;c<=cap;c++)
+    dp[i][c] = w[i-1]>c ? dp[i-1][c]
+             : Math.max(dp[i-1][c], v[i-1]+dp[i-1][c-w[i-1]]);
+  return dp[n][cap];
+}
+console.log("coin [1,2,5] amt 7 =", coinChange([1,2,5],7)); // 2
+console.log("coin [1,3,4] amt 6 =", coinChange([1,3,4],6)); // 2
+console.log("knapsack =", knapsack([1,3,4,5],[1,4,5,7],7)); // 9`}
+};
+document.querySelectorAll('.play[data-seed]').forEach(box=>{
+  const s=seeds[box.dataset.seed];
+  box.innerHTML=
+   '<div class="phead">▶ Try it yourself — '+s.title+' <span class="js">JavaScript</span></div>'+
+   '<textarea spellcheck="false">'+s.code+'</textarea>'+
+   '<div class="prun"><button class="btn sm">▶ Run</button><button class="btn sm sec">↺ รีเซ็ต</button></div>'+
+   '<div class="out"></div>';
+  const ta=box.querySelector('textarea'), out=box.querySelector('.out'),
+        run=box.querySelector('.btn:not(.sec)'), rs=box.querySelector('.sec'), orig=s.code;
+  run.onclick=()=>{
+    let logs=[]; const old=console.log;
+    console.log=(...a)=>logs.push(a.map(x=>typeof x==='object'?JSON.stringify(x):String(x)).join(' '));
+    try{ new Function(ta.value)(); out.style.color='#9fe6b4'; out.textContent=logs.join('\n')||'(ไม่มี output)'; }
+    catch(e){ out.style.color='#ff9b9b'; out.textContent='⚠ Error: '+e.message; }
+    console.log=old;
+  };
+  rs.onclick=()=>{ ta.value=orig; out.textContent=''; };
+});
+
+/* ============ STACK ============ */
+const Stack={d:[],el:()=>document.getElementById('stk-stage'),msg:m=>document.getElementById('stk-msg').textContent=m,
+ render(f){const e=this.el();e.innerHTML='';this.d.forEach((v,i)=>{const c=document.createElement('div');c.className='cell'+(f&&i===this.d.length-1?' flash':'');if(i===this.d.length-1){c.innerHTML='<span class="ptr">⟵ TOP</span>'+v;}else c.textContent=v;e.appendChild(c);});if(!this.d.length)e.innerHTML='<div class="cell empty">ว่าง</div>';},
+ push(){const v=document.getElementById('stk-in').value.trim();if(!v)return;this.d.push(v);this.render(true);this.msg('push('+v+') — ใส่ที่ TOP');},
+ pop(){if(!this.d.length){this.msg('⚠ stack ว่าง pop ไม่ได้!');return;}const v=this.d.pop();this.render();this.msg('pop() → ได้ '+v+' (เอาตัว TOP ออก)');},
+ reset(){this.d=[];this.render();this.msg('ล้างแล้ว');}};
+Stack.render();
+
+/* ============ QUEUE ============ */
+const Queue={d:[],el:()=>document.getElementById('q-stage'),msg:m=>document.getElementById('q-msg').textContent=m,
+ render(f){const e=this.el();e.innerHTML='';this.d.forEach((v,i)=>{const c=document.createElement('div');c.className='cell'+(f&&i===this.d.length-1?' flash':'');c.style.marginRight='6px';let p='';if(i===0)p+='<span class="ptr">FRONT</span>';if(i===this.d.length-1)p+='<span class="ptr" style="top:auto;bottom:-20px;color:#2f74c0">REAR</span>';c.innerHTML=p+v;e.appendChild(c);});if(!this.d.length)e.innerHTML='<div class="cell empty">ว่าง</div>';},
+ enq(){const v=document.getElementById('q-in').value.trim();if(!v)return;this.d.push(v);this.render(true);this.msg('enQueue('+v+') — ต่อท้ายที่ REAR');},
+ deq(){if(!this.d.length){this.msg('⚠ queue ว่าง!');return;}const v=this.d.shift();this.render();this.msg('deQueue() → ได้ '+v+' (เอาตัว FRONT ออก)');},
+ reset(){this.d=[];this.render();this.msg('ล้างแล้ว');}};
+Queue.render();
+
+/* ============ CIRCULAR QUEUE ============ */
+const CQ={N:8,a:new Array(8).fill(null),front:0,rear:0,count:0,
+ el:()=>document.getElementById('cq-stage'),msg:m=>document.getElementById('cq-msg').textContent=m,
+ render(fi){const e=this.el();e.innerHTML='';for(let i=0;i<this.N;i++){const c=document.createElement('div');const has=this.a[i]!==null;c.className='cell'+(has?'':' empty')+(fi===i?' flash':'');c.style.marginRight='4px';let p='';if(this.count>0&&i===this.front)p+='<span class="ptr">F</span>';if(this.count>0&&i===((this.rear-1+this.N)%this.N))p+='<span class="ptr" style="top:auto;bottom:-19px;color:#2f74c0">R</span>';c.innerHTML=p+(has?this.a[i]:'·')+'<span class="idx">'+i+'</span>';e.appendChild(c);}},
+ enq(){if(this.count>=this.N){this.msg('⚠ เต็มแล้ว');return;}const v=Math.floor(Math.random()*90+10);this.a[this.rear]=v;const at=this.rear;this.rear=(this.rear+1)%this.N;this.count++;this.render(at);this.msg('enQueue('+v+') ที่ index '+at+' · rear = (rear+1)%8 = '+this.rear);},
+ deq(){if(this.count===0){this.msg('⚠ ว่าง');return;}const v=this.a[this.front];this.a[this.front]=null;const at=this.front;this.front=(this.front+1)%this.N;this.count--;this.render();this.msg('deQueue() → '+v+' จาก index '+at+' · front = '+this.front);},
+ reset(){this.a=new Array(8).fill(null);this.front=this.rear=this.count=0;this.render();this.msg('ล้างแล้ว — ลอง enQueue หลายๆ ครั้งจน rear วนกลับช่อง 0');}};
+CQ.render();
+
+/* ============ BRACKET ============ */
+const Bracket={check(){const s=document.getElementById('br-in').value;const e=document.getElementById('br-stage');let stack=[],log=[],ok=true;for(const ch of s){if(ch==='('){stack.push('(');log.push('เจอ ( → push · stack=['+stack.join('')+']');}else if(ch===')'){if(!stack.length){ok=false;log.push('เจอ ) แต่ stack ว่าง → ❌ ไม่สมดุล');break;}stack.pop();log.push('เจอ ) → pop · stack=['+stack.join('')+']');}}if(ok&&stack.length){ok=false;log.push('จบแล้วแต่ stack ยังเหลือ '+stack.length+' ตัว → ❌ ไม่สมดุล');}if(ok)log.push('จบแล้ว stack ว่าง → ✅ สมดุล!');e.innerHTML=log.map(l=>'<div>'+l+'</div>').join('')+'<div style="margin-top:8px;font-weight:700;color:'+(ok?'#1f9d57':'#d6453d')+'">ผลลัพธ์: '+(ok?'สมดุล ✅':'ไม่สมดุล ❌')+'</div>';}};
+
+/* ============ LINKED LIST DEMO ============ */
+const LL={d:[5],el:()=>document.getElementById('ll-stage'),msg:m=>document.getElementById('ll-msg').textContent=m,
+ render(fi){const e=this.el();e.innerHTML='';if(!this.d.length){e.innerHTML='<div class="nullbox">head → null (ว่าง)</div>';return;}const row=document.createElement('div');row.className='llrow';this.d.forEach((v,i)=>{const wrap=document.createElement('div');if(i===0)wrap.innerHTML='<div class="lbl">head</div>';const n=document.createElement('div');n.className='node'+(fi===i?' ':'');n.style.animation=fi===i?'pop .4s':'';n.innerHTML='<div class="v">'+v+'</div><div class="nx">next</div>';wrap.appendChild(n);row.appendChild(wrap);const ar=document.createElement('span');ar.className='arrow';ar.textContent='→';row.appendChild(ar);});const nb=document.createElement('div');nb.className='nullbox';nb.textContent='null';row.appendChild(nb);e.appendChild(row);},
+ addFirst(){const v=document.getElementById('ll-in').value.trim();if(!v)return;this.d.unshift(v);this.render(0);this.msg('addFirst('+v+') — node ใหม่ที่หัว, next ชี้ head เดิม, head เลื่อนมาตัวใหม่');},
+ addLast(){const v=document.getElementById('ll-in').value.trim();if(!v)return;this.d.push(v);this.render(this.d.length-1);this.msg('addLast('+v+') — ต่อท้าย (ถ้าไม่มี tail ต้องเดินไปท้ายก่อน = O(n))');},
+ removeFirst(){if(!this.d.length){this.msg('⚠ ว่าง');return;}const v=this.d.shift();this.render();this.msg('removeFirst() → ลบ '+v+' · head = head.next (ตัวเก่ากลายเป็น garbage)');},
+ reset(){this.d=[];this.render();this.msg('ล้างแล้ว');}};
+LL.render();
+
+/* ============ FACTORIAL CALL STACK ============ */
+const Fact={async run(){const n=+document.getElementById('fac-n').value;const e=document.getElementById('fac-stage');e.innerHTML='';const frames=[];const sleep=t=>new Promise(r=>setTimeout(r,t));
+  for(let i=n;i>=1;i--){const f=document.createElement('div');f.className='frame active';f.textContent='factorial('+i+') '+(i<=1?'→ base case คืน 1':'= '+i+' × factorial('+(i-1)+')');e.appendChild(f);frames.push(f);await sleep(550);f.classList.remove('active');}
+  let acc=1;for(let i=1;i<=n;i++){const f=frames[n-i];f.classList.add('done');acc=acc*Math.max(i,1);f.textContent='factorial('+i+') → คืนค่า '+acc;await sleep(550);}
+  const r=document.createElement('div');r.style.cssText='margin-top:10px;font-weight:700;color:#0f2a5e';r.textContent='ผลลัพธ์ factorial('+n+') = '+acc;e.appendChild(r);}};
+
+/* ============ FIB COUNT ============ */
+const Fib={run(){const n=+document.getElementById('fib-n').value;let calls=0;function f(k){calls++;if(k<=1)return k;return f(k-1)+f(k-2);}const val=f(n);const memoCalls=n+1;document.getElementById('fib-stage').innerHTML='<div style="font-size:15px">fib('+n+') = <b>'+val+'</b><br><br>🐌 recursion ธรรมดา: เรียก <b style="color:#d6453d">'+calls+'</b> ครั้ง (≈ 2ⁿ — คำนวณซ้ำเยอะ)<br>⚡ แบบ memoization: เรียกแค่ <b style="color:#1f9d57">'+memoCalls+'</b> ครั้ง (O(n) — แต่ละค่าคำนวณครั้งเดียว)<br><br>ยิ่ง n ใหญ่ ยิ่งต่างกันมหาศาล → นี่คือเหตุผลที่ต้องใช้ DP (Lesson 8)</div>';}};
+
+/* ============ BIG O GRAPH ============ */
+const BigO={draw(){const cv=document.getElementById('bo-canvas');if(!cv)return;const ctx=cv.getContext('2d');const W=cv.width,H=cv.height,pad=46;const maxN=+document.getElementById('bo-n').value;document.getElementById('bo-nval').textContent=maxN;const maxY=Math.min(1000, Math.max(50, maxN*maxN));ctx.clearRect(0,0,W,H);
+  const dark=document.body.classList.contains('dark');
+  ctx.strokeStyle=dark?'#243049':'#dde6f3';ctx.lineWidth=1;ctx.fillStyle=dark?'#8da3c2':'#8aa0bf';ctx.font='11px JetBrains Mono';
+  for(let i=0;i<=10;i++){const y=H-pad-(H-2*pad)*i/10;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-10,y);ctx.stroke();}
+  ctx.strokeStyle=dark?'#3a4a66':'#9fb2cd';ctx.beginPath();ctx.moveTo(pad,pad-10);ctx.lineTo(pad,H-pad);ctx.lineTo(W-10,H-pad);ctx.stroke();
+  ctx.fillText('operations',pad+4,pad-12);ctx.fillText('input n →',W-80,H-pad+24);
+  const fns=[['O(1)',n=>1,'#1f9d57'],['O(log n)',n=>Math.log2(n+1),'#13a89e'],['O(n)',n=>n,'#2f74c0'],['O(n log n)',n=>n*Math.log2(n+1),'#7a4fc0'],['O(n²)',n=>n*n,'#19b6d8'],['O(2ⁿ)',n=>Math.pow(2,n),'#e8842b'],['O(n!)',n=>{let f=1;for(let i=2;i<=n;i++)f*=i;return f;},'#d6453d']];
+  const X=n=>pad+(W-pad-14)*n/maxN, Y=v=>H-pad-(H-2*pad)*Math.min(v,maxY)/maxY;
+  fns.forEach(([lab,fn,col],idx)=>{ctx.strokeStyle=col;ctx.lineWidth=2.4;ctx.beginPath();let first=true;for(let n=0;n<=maxN;n+=Math.max(.25,maxN/240)){const v=fn(n);const x=X(n),y=Y(v);if(first){ctx.moveTo(x,y);first=false;}else ctx.lineTo(x,y);}ctx.stroke();ctx.fillStyle=col;ctx.fillRect(W-128,18+idx*21,12,12);ctx.fillStyle=dark?'#cfe0fa':'#33465f';ctx.font='12px JetBrains Mono';ctx.fillText(lab,W-110,28+idx*21);});}};
+
+/* ============ HANOI ============ */
+const Hanoi={n:3,pegs:[[],[],[]],moves:[],step:0,timer:null,
+ reset(){this.n=+document.getElementById('ha-n').value;document.getElementById('ha-nval').textContent=this.n;this.pegs=[[],[],[]];for(let i=this.n;i>=1;i--)this.pegs[0].push(i);this.moves=[];this.step=0;this._gen(this.n,0,2,1);document.getElementById('ha-total').textContent=Math.pow(2,this.n)-1;document.getElementById('ha-moves').textContent=0;if(this.timer)clearInterval(this.timer);this.draw();},
+ _gen(k,from,to,via){if(k===0)return;this._gen(k-1,from,via,to);this.moves.push([from,to]);this._gen(k-1,via,to,from);},
+ play(){if(this.timer)clearInterval(this.timer);this.step=0;this.pegs=[[],[],[]];for(let i=this.n;i>=1;i--)this.pegs[0].push(i);this.draw();this.timer=setInterval(()=>{if(this.step>=this.moves.length){clearInterval(this.timer);document.getElementById('ha-msg').textContent='เสร็จ! ใช้ '+this.moves.length+' ครั้ง = 2^'+this.n+' − 1';return;}const[f,t]=this.moves[this.step];this.pegs[t].push(this.pegs[f].pop());this.step++;document.getElementById('ha-moves').textContent=this.step;this.draw();},Math.max(180,700/this.n));},
+ draw(){const cv=document.getElementById('ha-canvas');const ctx=cv.getContext('2d');const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);const dark=document.body.classList.contains('dark');const poleC=dark?'#6f8bc4':'#0f2a5e';const names=['A','B','C'];const pegX=[W/6,W/2,5*W/6];const base=H-30,maxW=W/3.6;ctx.fillStyle=poleC;for(let p=0;p<3;p++){ctx.fillRect(pegX[p]-4,base-150,8,150);ctx.fillRect(pegX[p]-maxW/2,base,maxW,10);ctx.font='bold 16px Sarabun';ctx.textAlign='center';ctx.fillStyle=poleC;ctx.fillText(names[p],pegX[p],base+28);ctx.fillStyle=poleC;}const cols=['#2f74c0','#19b6d8','#1f9d57','#e8842b','#d6453d','#7a4fc0','#13a89e'];for(let p=0;p<3;p++){this.pegs[p].forEach((disk,i)=>{const w=maxW*disk/this.n;const x=pegX[p]-w/2;const y=base-(i+1)*20;ctx.fillStyle=cols[(disk-1)%cols.length];ctx.beginPath();ctx.roundRect(x,y,w,18,5);ctx.fill();});}}};
+if(typeof CanvasRenderingContext2D!=='undefined'&&!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};}
+
+/* ============ DP FIB ============ */
+const DPFib={run(){const n=+document.getElementById('dpfib-n').value;let rc=0;function r(k){rc++;if(k<=1)return k;return r(k-1)+r(k-2);}let val=n<=35?r(n):'(ใหญ่ไป)';if(n>35)rc='มหาศาล';document.getElementById('dpfib-stage').innerHTML='<div style="font-size:15px">fib('+n+') = <b>'+val+'</b><br>🐌 recursion: <b style="color:#d6453d">'+rc+'</b> ครั้ง &nbsp;|&nbsp; ⚡ DP: <b style="color:#1f9d57">'+n+'</b> ครั้ง</div>';}};
+
+/* ============ DP TABLE (fib bottom-up) ============ */
+const DPTable={async run(){const n=8;const e=document.getElementById('dptable-stage');const dp=new Array(n+1).fill(0);dp[1]=1;const sleep=t=>new Promise(r=>setTimeout(r,t));
+  function render(hl){let h='<div class="dpgrid" style="grid-template-columns:repeat('+(n+1)+',1fr)">';for(let i=0;i<=n;i++)h+='<div class="c head">'+i+'</div>';for(let i=0;i<=n;i++){let cls='c'+(dp[i]!==undefined&&i<=hl?' fill':'')+(hl===i?' flash':'');h+='<div class="'+cls+'">'+(i<=hl?dp[i]:'?')+'</div>';}h+='</div><div style="font-size:12px;color:#5a6b85;margin-top:4px">แถวบน=index, แถวล่าง=dp[i]</div>';e.innerHTML=h;}
+  render(1);await sleep(500);for(let i=2;i<=n;i++){dp[i]=dp[i-1]+dp[i-2];render(i);await sleep(600);}}};
+
+/* ============ COIN CHANGE ============ */
+const Coin={async run(){const coins=document.getElementById('coin-c').value.split(',').map(x=>+x.trim()).filter(x=>x>0);const amt=+document.getElementById('coin-a').value;const e=document.getElementById('coin-stage');const INF=9999;const dp=new Array(amt+1).fill(INF);dp[0]=0;const sleep=t=>new Promise(r=>setTimeout(r,t));
+  function render(hl){let h='<div class="dpgrid" style="grid-template-columns:repeat('+(amt+1)+',1fr)">';for(let i=0;i<=amt;i++)h+='<div class="c head">'+i+'</div>';for(let i=0;i<=amt;i++){let cls='c'+(dp[i]<INF?' fill':'')+(hl===i?' flash':'')+(i===amt&&dp[i]<INF?' best':'');h+='<div class="'+cls+'">'+(dp[i]>=INF?'∞':dp[i])+'</div>';}h+='</div>';e.innerHTML=h;}
+  render(-1);await sleep(400);for(let a=1;a<=amt;a++){for(const c of coins){if(c<=a&&dp[a-c]+1<dp[a])dp[a]=dp[a-c]+1;}render(a);await sleep(420);}document.getElementById('coin-msg').textContent=dp[amt]>=INF?'จ่ายยอดนี้ไม่ได้ด้วยเหรียญชุดนี้':'ยอด '+amt+' ใช้เหรียญน้อยสุด = '+dp[amt]+' เหรียญ';}};
+
+/* ============ KNAPSACK ============ */
+const Knap={async run(){const w=[1,3,4,5],v=[1,4,5,7],cap=7,n=4;const dp=[];for(let i=0;i<=n;i++)dp.push(new Array(cap+1).fill(0));const e=document.getElementById('knap-stage');const sleep=t=>new Promise(r=>setTimeout(r,t));
+  function render(hr,hc){let h='<div class="dpgrid" style="grid-template-columns:repeat('+(cap+2)+',1fr)">';h+='<div class="c head">i\\c</div>';for(let c=0;c<=cap;c++)h+='<div class="c head">'+c+'</div>';for(let i=0;i<=n;i++){h+='<div class="c head">'+i+'</div>';for(let c=0;c<=cap;c++){let cls='c'+(i<=hr?' fill':'')+(hr===i&&hc===c?' flash':'')+(i===n&&c===cap?' best':'');h+='<div class="'+cls+'">'+(i<=hr||(i===hr+1)?dp[i][c]:'·')+'</div>';}}h+='</div>';e.innerHTML=h;}
+  render(0,-1);await sleep(450);for(let i=1;i<=n;i++){for(let c=1;c<=cap;c++){if(w[i-1]>c)dp[i][c]=dp[i-1][c];else dp[i][c]=Math.max(dp[i-1][c],v[i-1]+dp[i-1][c-w[i-1]]);}render(i,cap);await sleep(700);}document.getElementById('knap-msg').textContent='คำตอบ dp[4][7] = '+dp[n][cap]+' (เลือกของน้ำหนัก 3+4 = มูลค่า 4+5 = 9)';}};
+
+/* ============ QUIZ DATA ============ */
+const quiz=[
+['Linked List ต่างจาก Array ตรงไหนเรื่องการเข้าถึงข้อมูล?','Array เข้าถึงด้วย index ได้ทันที O(1) · Linked List ต้องไล่ทีละตัวจาก head = O(n)'],
+['addFirst ของ Linked List เขียนยังไง?','Node temp = new Node(x); temp.next = head; head = temp; → สร้างตัวใหม่ ให้ชี้ head เดิม แล้วเลื่อน head'],
+['removeFirst ทำอะไร node เก่าเป็นยังไง?','head = head.next; → ตัวเก่าไม่มีใครชี้ กลายเป็น garbage ให้ JVM เก็บ'],
+['Tailed / Circular / Doubly ต่างกันยังไง?','Tailed=เพิ่ม tail (addLast เร็ว O(1)) · Circular=tail ชี้กลับ head (วนซ้ำ) · Doubly=เพิ่ม prev (เดินถอยหลัง)'],
+['ใน Java new Integer(20) == new Integer(20) ได้อะไร?','false — == เทียบ reference (ที่อยู่) ไม่ใช่ค่า, new สร้างคนละ object · เทียบค่าใช้ .equals()'],
+['ADT คืออะไร?','ชนิดข้อมูลที่นิยามด้วยชุดค่า+ชุด operation โดยซ่อนวิธี implement (black box)'],
+['Generics &lt;E&gt; มีประโยชน์หลักอะไร?','class เก็บได้ทุกชนิด + compiler ตรวจ type mismatch ได้ก่อนรัน'],
+['ทำไมเขียน new E[size] ตรงๆ ไม่ได้ ต้องทำยังไง?','Java ไม่ยอมสร้าง generic array ตรงๆ → ต้อง (E[]) new Object[size]'],
+['ทำไมไม่วัดประสิทธิภาพด้วยเวลาจริง?','เครื่องต่างกัน/รันแต่ละครั้งต่างกัน/เร็วๆวัดไม่แม่น → นับ operation เทียบขนาด input แทน'],
+['for(i=1;i&lt;n;i=i*2) เป็น Big O อะไร?','O(log n) — เพราะ i เพิ่มเป็น 2 เท่าทุกรอบ ถึง n ใน log₂n รอบ'],
+['loop ซ้อน j&lt;=i ได้ Big O อะไร?','O(n²) — รวม 1+2+...+n = n(n+1)/2'],
+['นิยามทางการ Big O?','มี c, n₀ ที่ทำให้ 0 ≤ f(n) ≤ c·g(n) สำหรับทุก n ≥ n₀'],
+['3 องค์ประกอบของ recursion?','Base case (หยุด), Recursive case (เรียกตัวเองเล็กลง), Progress (เข้าใกล้ base case)'],
+['ทำไม Fibonacci recursion เป็น O(2ⁿ)?','เรียกตัวเอง 2 ครั้งทุกชั้น → จำนวนการเรียกโต 2 เท่าทุกชั้น + คำนวณค่าซ้ำเยอะ'],
+['Tower of Hanoi N แผ่นใช้กี่ครั้ง?','2ᴺ − 1 ครั้ง → O(2ⁿ)'],
+['DP คืออะไรสั้นๆ?','Recursion + Memory: แก้ครั้งเดียว เก็บไว้ ใช้ซ้ำ (ไม่คำนวณซ้ำ)'],
+['Top-down ต่างจาก Bottom-up?','Top-down=recursion+cache(memo) · Bottom-up=เริ่มเล็กสุดไล่สร้างด้วย loop (tabulation)'],
+['Coin Change recurrence?','dp[a] = min(dp[a], dp[a-coin] + 1), base dp[0]=0 · Time O(amount×coins)'],
+['Knapsack dp[i][c] คืออะไร?','มูลค่าสูงสุดใช้ของ i ชิ้นแรก ความจุ c · max(skip=dp[i-1][c], take=value+dp[i-1][c-weight])'],
+['recursion ใช้ space เท่าไร ทำไม?','O(n) — เพราะแต่ละการเรียกค้าง frame บน call stack จนถึง base case (loop ใช้แค่ O(1))'],
+['Fibonacci ลด space เหลือ O(1) ได้ยังไง?','ใช้แค่ 2 ตัวแปรเก็บค่าก่อนหน้า 2 ตัว ไม่ต้องเก็บ array ทั้งตัว'],
+];
+document.getElementById('quizbox').innerHTML=quiz.map((q,i)=>'<div class="quiz" onclick="this.classList.toggle(\'open\')"><div class="q">'+(i+1)+'. '+q[0]+' <span style="float:right;color:#2f74c0;font-size:13px">กดดูเฉลย ▾</span></div><div class="ans">✅ '+q[1]+'</div></div>').join('');
+
+/* ============ DARK MODE ============ */
+function toggleDark(){
+  const on=document.body.classList.toggle('dark');
+  document.getElementById('darkBtn').textContent=on?'☀️':'🌙';
+  try{localStorage.setItem('dsa-dark',on?'1':'0');}catch(e){}
+  try{BigO.draw();}catch(e){}
+  try{Hanoi.draw();}catch(e){}
+}
+(function(){try{if(localStorage.getItem('dsa-dark')==='1'){document.body.classList.add('dark');document.getElementById('darkBtn').textContent='☀️';}}catch(e){}})();
+
+/* ============ LINKED LIST STEP ANIMATIONS ============ */
+function buildAnim(boxId, title, nodes, arrows, steps){
+  const box=document.getElementById(boxId); if(!box)return;
+  const NW=64,NH=44,NX=26; // ขนาดตู้ (value 64 + next 26)
+  let svg='<svg viewBox="0 0 720 220" preserveAspectRatio="xMidYMid meet">';
+  svg+='<defs><marker id="ah'+boxId+'" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#33485f"/></marker></defs>';
+  // arrows ก่อน (อยู่หลังตู้)
+  arrows.forEach(a=>{ svg+='<path class="ar hidden" id="'+a.id+'" d="'+a.d+'" fill="none" stroke="'+(a.c||'#2f74c0')+'" stroke-width="2.6" marker-end="url(#ah'+boxId+')"/>'; });
+  // ตู้ (node)
+  nodes.forEach(n=>{
+    svg+='<g class="nd hidden" id="'+n.id+'">';
+    svg+='<rect class="box" x="'+n.x+'" y="'+n.y+'" width="'+NW+'" height="'+NH+'" rx="7" fill="'+(n.c||'#2f74c0')+'"/>';
+    svg+='<rect x="'+(n.x+NW)+'" y="'+n.y+'" width="'+NX+'" height="'+NH+'" rx="3" fill="#9aa7bd"/>';
+    svg+='<text x="'+(n.x+NW/2)+'" y="'+(n.y+NH/2+1)+'" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-weight="700" font-size="20" fill="#fff">'+n.label+'</text>';
+    svg+='<circle cx="'+(n.x+NW+NX/2)+'" cy="'+(n.y+NH/2)+'" r="3.5" fill="#33485f"/>';
+    svg+='</g>';
+  });
+  svg+='</svg>';
+  box.innerHTML='<div class="ahead">🎬 '+title+'</div>'+
+    '<div class="astage">'+svg+'</div>'+
+    '<div class="acap"></div>'+
+    '<div class="actrl">'+
+      '<button class="btn sm sec">◀ ก่อนหน้า</button>'+
+      '<button class="btn sm">ถัดไป ▶</button>'+
+      '<button class="btn sm">▶ เล่นอัตโนมัติ</button>'+
+      '<button class="btn sm sec">↺ เริ่มใหม่</button>'+
+      '<span class="prog"></span>'+
+    '</div>';
+  const cap=box.querySelector('.acap'), prog=box.querySelector('.prog');
+  const allIds=nodes.map(n=>n.id).concat(arrows.map(a=>a.id));
+  const P={i:0,timer:null};
+  function render(){
+    const s=steps[P.i];
+    allIds.forEach(id=>{const e=box.querySelector('#'+id);if(!e)return;
+      e.classList.toggle('hidden', !s.vis.includes(id));
+      e.classList.toggle('changing', (s.red||[]).includes(id));
+      e.classList.toggle('glow', (s.glow||[]).includes(id));
+    });
+    cap.innerHTML='<b>สเตป '+P.i+':</b> '+s.cap;
+    prog.textContent=P.i+' / '+(steps.length-1);
+  }
+  const btns=box.querySelectorAll('.actrl button');
+  const stop=()=>{if(P.timer){clearInterval(P.timer);P.timer=null;}};
+  btns[0].onclick=()=>{stop();if(P.i>0){P.i--;render();}};
+  btns[1].onclick=()=>{stop();if(P.i<steps.length-1){P.i++;render();}};
+  btns[3].onclick=()=>{stop();P.i=0;render();};
+  btns[2].onclick=()=>{stop();P.i=0;render();P.timer=setInterval(()=>{if(P.i>=steps.length-1){stop();return;}P.i++;render();},1500);};
+  render();
+}
+/* --- แทรก Y ก่อน A : X→A→B  กลายเป็น  X→Y→A→B --- */
+buildAnim('anim-insert','แทรก node ใหม่ (Y) ก่อน A',
+  [{id:'iX',label:'X',x:40,y:38},{id:'iA',label:'A',x:320,y:38},{id:'iB',label:'B',x:560,y:38},{id:'iY',label:'Y',x:180,y:138,c:'#13a85a'}],
+  [{id:'iXA',d:'M117,60 L320,60'},{id:'iAB',d:'M397,60 L560,60'},
+   {id:'iYA',d:'M257,160 Q320,150 332,84',c:'#13a85a'},{id:'iXY',d:'M117,82 Q120,130 200,148',c:'#13a85a'}],
+  [
+   {vis:['iX','iA','iB','iXA','iAB'],cap:'ขบวนเดิม: X → A → B (ลูกศรคือขอเกี่ยว next)'},
+   {vis:['iX','iA','iB','iXA','iAB','iY'],glow:['iY'],cap:'สร้างตู้ใหม่ "Y" ขึ้นมา (ยังลอยอยู่ ยังไม่ต่อขบวน) — อยากแทรก Y ไว้ก่อน A'},
+   {vis:['iX','iA','iB','iXA','iAB','iY','iYA'],red:['iYA'],cap:'① เกี่ยวขอของ Y ไปที่ A ก่อน (Y.next = A) — ตอนนี้ Y รู้ว่าตัวถัดไปคือ A'},
+   {vis:['iX','iA','iB','iAB','iY','iYA','iXY'],red:['iXY'],cap:'② ค่อยเปลี่ยนขอของ X จาก A มาเกี่ยว Y แทน (X.next = Y) — ลูกศรเดิม X→A หายไป'},
+   {vis:['iX','iY','iA','iB','iYA','iXY','iAB'],glow:['iY'],cap:'เสร็จ! ขบวนใหม่ = X → Y → A → B ✅ (ไม่ต้องขยับตู้ A หรือ B เลย แค่เปลี่ยนลูกศร 2 เส้น)'}
+  ]);
+/* --- ลบ A : X→A→B  กลายเป็น  X→B --- */
+buildAnim('anim-remove','ลบ node A (ตรงกลาง)',
+  [{id:'rX',label:'X',x:40,y:38},{id:'rA',label:'A',x:300,y:38,c:'#d6453d'},{id:'rB',label:'B',x:560,y:38}],
+  [{id:'rXA',d:'M117,60 L300,60'},{id:'rAB',d:'M377,60 L560,60'},
+   {id:'rXB',d:'M117,82 Q350,170 560,82',c:'#13a85a'}],
+  [
+   {vis:['rX','rA','rB','rXA','rAB'],cap:'ขบวนเดิม: X → A → B'},
+   {vis:['rX','rA','rB','rXA','rAB'],glow:['rA'],cap:'อยากลบตู้ A ที่อยู่ตรงกลาง'},
+   {vis:['rX','rA','rB','rAB','rXB'],red:['rXB'],cap:'① เปลี่ยนขอของ X ให้ข้าม A ไปเกี่ยว B โดยตรง (X.next = B) — ลูกศร X→A หายไป'},
+   {vis:['rX','rB','rXB'],cap:'② ตอนนี้ไม่มีลูกศรไหนชี้ A แล้ว → A หลุดออกจากขบวน (Java จะเก็บทิ้งเองอัตโนมัติ = garbage collection)'},
+   {vis:['rX','rB','rXB'],glow:['rB'],cap:'เสร็จ! ขบวนใหม่ = X → B ✅'}
+  ]);
+
+/* ============ DARK MODE re-init for anim already built above ============ */
+
+/* init graphs */
+BigO.draw();Hanoi.reset();
+</script>
+</body>
+</html>
