@@ -111,6 +111,25 @@ body.dark .anim .actrl{background:#141d30}
 .anim .ar.changing{stroke:#d6453d;stroke-width:4;animation:dash 1s ease}
 @keyframes dash{from{stroke-dasharray:6;stroke-dashoffset:40}to{stroke-dashoffset:0}}
 .anim .nd.glow rect.box{stroke:#13a85a;stroke-width:3.5}
+/* ---- merge sort rows ---- */
+.msort{padding:8px 6px}
+.msort-lv{display:flex;align-items:center;gap:10px;margin:7px 0;animation:fade .4s ease}
+.msort-lv .lvtag{font-size:11.5px;color:var(--muted);width:74px;text-align:right;flex:0 0 74px;font-weight:600}
+.msort-rows{display:flex;gap:16px;flex-wrap:wrap;flex:1}
+.msort-seg{display:flex;gap:3px;padding:4px;border-radius:8px;background:rgba(47,116,192,.10);border:1px solid var(--line)}
+body.dark .msort-seg{background:rgba(79,154,224,.14)}
+.msort-b{min-width:32px;height:32px;padding:0 4px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:#2f74c0;color:#fff;font-weight:700;font-family:'JetBrains Mono',monospace;font-size:15px}
+.msort-b.sorted{background:#13a85a}
+.msort-b.flash{animation:pop .4s}
+/* ---- Big O race bars ---- */
+.boa{padding:10px 8px}
+.boa-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+.boa-lbl{flex:0 0 86px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px}
+.boa-track{flex:1;background:rgba(0,0,0,.06);border-radius:7px;height:26px;overflow:hidden}
+body.dark .boa-track{background:rgba(255,255,255,.08)}
+.boa-fill{height:100%;border-radius:7px;width:3px;transition:width .55s cubic-bezier(.4,1,.5,1);min-width:3px}
+.boa-num{flex:0 0 138px;font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;color:var(--muted)}
+.boa-nbig{text-align:center;font-size:17px;font-weight:700;color:var(--navy);margin:4px 0 10px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:720px){.grid2{grid-template-columns:1fr}}
 
@@ -226,6 +245,8 @@ footer{color:var(--muted);font-size:13px;text-align:center;padding:30px;border-t
   <a data-go="l7">Lesson 7 <span class="tag">· Recursion</span></a>
   <a data-go="hanoi">Tower of Hanoi</a>
   <a data-go="l8">Lesson 8 <span class="tag">· Dynamic Prog.</span></a>
+  <div class="grp">Part 2 (พรีวิว)</div>
+  <a data-go="merge">Merge Sort 🔀 <span class="tag">· n log n</span></a>
   <div class="grp">เสริม</div>
   <a data-go="space">Space Complexity</a>
   <a data-go="hw">📝 เฉลยการบ้าน (Java)</a>
@@ -685,6 +706,33 @@ Pair&lt;Integer, Character&gt; p = ...;               // ✅ ทำได้ —
   </ul>
   <div class="note key">แทนที่จะจับเวลา เรา<b>นับจำนวน operation เทียบกับขนาดของ input (n)</b> ว่าโตขึ้นแบบไหนเมื่อ n ใหญ่ขึ้น</div>
 
+  <h3>🧒 แต่ละแบบคืออะไร (อธิบายง่ายๆ)</h3>
+  <p><code>n</code> = ขนาดข้อมูล (มีของ n ชิ้น) · Big O บอกว่า "พอของเยอะขึ้น งานจะหนักขึ้นเร็วแค่ไหน"</p>
+  <div class="grid2">
+    <div class="card"><h4 style="color:#13a85a">🟢 O(1) — คงที่</h4>ทำกี่ครั้งก็เท่าเดิม ไม่สนว่าข้อมูลเยอะแค่ไหน<br><span class="hint">🧒 หยิบหนังสือเล่มบนสุดของกอง — กองสูงแค่ไหนก็หยิบครั้งเดียว</span><br><code>arr[0]</code></div>
+    <div class="card"><h4 style="color:#2f74c0">🔵 O(log n) — หารครึ่ง</h4>ทุกครั้งตัดงานเหลือครึ่ง → ล้านชิ้นก็ ~20 ครั้ง<br><span class="hint">🧒 เปิดพจนานุกรมหาคำ เปิดกลางเล่ม แล้วเลือกครึ่งที่ใช่ ไม่เปิดทีละหน้า</span><br><code>i = i*2</code></div>
+    <div class="card"><h4 style="color:#c98a00">🟡 O(n) — ตามตรง</h4>ของ n ชิ้น ทำ n ครั้ง (เส้นตรง)<br><span class="hint">🧒 นับเพื่อนในห้องทีละคน 30 คนนับ 30 ครั้ง</span><br><code>for i in 0..n</code></div>
+    <div class="card"><h4 style="color:#7a4fc0">🟣 O(n log n)</h4>วนครบ n ชิ้น ซ้ำ log n ชั้น (อยู่ระหว่าง n กับ n²)<br><span class="hint">🧒 เรียงของแบบแบ่งครึ่ง (Merge Sort)</span></div>
+    <div class="card"><h4 style="color:#e8842b">🟠 O(n²) — ทุกคู่</h4>loop ซ้อน loop = n × n<br><span class="hint">🧒 ในห้อง n คน ให้ทุกคนจับมือกันทุกคน · 10 คน=100 ครั้ง, 100 คน=10,000!</span><br><code>for i { for j }</code></div>
+    <div class="card"><h4 style="color:#d6453d">🔴 O(2ⁿ), O(n!) — ระเบิด</h4>เพิ่ม n ทีละ 1 งานพุ่งทวีคูณ ใช้จริงไม่ได้<br><span class="hint">🧒 Tower of Hanoi 64 แผ่น = 585,000 ล้านปี 😱</span></div>
+  </div>
+
+  <h4>📊 ถ้า n = 100 ต้องทำกี่ครั้ง?</h4>
+  <table>
+    <tr><th>Big O</th><th>n=100 ทำกี่ครั้ง</th><th>ระดับ</th></tr>
+    <tr><td>O(1)</td><td>1</td><td>🟢 สุดยอด</td></tr>
+    <tr><td>O(log n)</td><td>~7</td><td>🔵 เยี่ยม</td></tr>
+    <tr><td>O(n)</td><td>100</td><td>🟡 โอเค</td></tr>
+    <tr><td>O(n log n)</td><td>~700</td><td>🟣 ดี</td></tr>
+    <tr><td>O(n²)</td><td>10,000</td><td>🟠 เริ่มอืด</td></tr>
+    <tr><td>O(2ⁿ)</td><td>เลข 30 หลัก</td><td>🔴 พัง</td></tr>
+    <tr><td>O(n!)</td><td>เลข 158 หลัก</td><td>🔴 พังหนัก</td></tr>
+  </table>
+
+  <h3>🎬 อนิเมชัน: ดู "งาน" โตตาม n</h3>
+  <p>กด <b>เพิ่ม n ▶</b> ทีละขั้น (หรือเล่นอัตโนมัติ) แล้วดูแท่งของแต่ละแบบยืดออก — ตอน n น้อยพอๆ กัน แต่พอ n โต O(n²)/O(2ⁿ) ทิ้งห่างเร็วมาก</p>
+  <div class="anim" id="anim-bigo"></div>
+
   <h3>นับ operation → หา Big O</h3>
   <p>ตัวอย่าง: ฟังก์ชันบวกเลขใน array</p>
   <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
@@ -896,6 +944,52 @@ public static void solve(int n, char from, char temp, char to) {
     <li>เขียน recurrence relation</li><li>เลือก top-down หรือ bottom-up</li>
     <li>เติม memo / table</li><li>คืนคำตอบ</li>
   </ol>
+</section>
+
+<!-- ---------- MERGE SORT (Part 2 preview) ---------- -->
+<section class="panel" id="p-merge">
+  <h2 class="title">Merge Sort 🔀 <span style="font-size:18px;color:var(--muted)">(Part 2 พรีวิว)</span></h2>
+  <p class="lead">วิธีเรียงของที่เร็วระดับ O(n log n) — ใช้หลัก "แบ่งครึ่ง แล้วรวมกลับแบบเรียง"</p>
+
+  <div class="note simple"><b>🧒 อธิบายแบบง่ายสุดๆ</b><br>
+  อยากเรียงไพ่กองใหญ่ให้เร็ว? <b>แบ่งครึ่งไปเรื่อยๆ จนเหลือกองละใบเดียว</b> (ใบเดียวมันเรียงเสร็จอยู่แล้ว) แล้ว<b>ค่อยๆ รวมกองกลับ</b> โดยจับ 2 กองมาเทียบหัวกองทีละใบ หยิบใบน้อยกว่าใส่กองใหม่ → ได้กองที่เรียงแล้ว ทำไปเรื่อยๆ จนรวมเป็นกองเดียว = เรียงเสร็จ!</div>
+
+  <h3>🎬 อนิเมชัน: แบ่งครึ่ง → รวมกลับ</h3>
+  <p>กดทีละสเตปดูการ "แบ่ง" (ลงล่าง) แล้ว "รวมกลับแบบเรียง" (ขึ้นบน) — สังเกตจำนวนชั้น</p>
+  <div class="anim" id="anim-merge"></div>
+  <div class="note key"><b>ทำไมเป็น O(n log n)?</b> นับจากอนิเมชัน: การ<b>แบ่งครึ่ง</b>ทำได้ <b>log₂n ชั้น</b> (8 ตัว → 3 ชั้น) · และทุกครั้งที่<b>รวมกลับแต่ละชั้น ต้องหยิบของมาเทียบครบ n ตัว</b> → รวม = n × log n = <b>n log n</b> 🎯</div>
+
+  <h3>โค้ด Merge Sort (Java)</h3>
+  <div class="codebox"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lang">Java</span></div>
+<pre class="java">public static void mergeSort(int[] a, int left, int right) {
+    if (left &gt;= right) return;                 // base case: เหลือ 1 ตัว (เรียงเสร็จแล้ว)
+    int mid = (left + right) / 2;               // หาจุดกึ่งกลาง
+    mergeSort(a, left, mid);                    // แบ่งครึ่งซ้าย (recursion)
+    mergeSort(a, mid + 1, right);               // แบ่งครึ่งขวา (recursion)
+    merge(a, left, mid, right);                 // รวม 2 ครึ่งที่เรียงแล้วเข้าด้วยกัน
+}
+
+// รวม a[left..mid] กับ a[mid+1..right] (สองครึ่งที่เรียงแล้ว) ให้เป็นกองเรียงเดียว
+public static void merge(int[] a, int left, int mid, int right) {
+    int[] tmp = new int[right - left + 1];      // กองใหม่ไว้พักผลลัพธ์
+    int i = left, j = mid + 1, k = 0;           // i=หัวกองซ้าย, j=หัวกองขวา
+    while (i &lt;= mid &amp;&amp; j &lt;= right) {              // ตราบใดที่ทั้งสองกองยังมีของ
+        if (a[i] &lt;= a[j]) tmp[k++] = a[i++];     // หยิบตัวน้อยกว่าจากกองซ้าย
+        else              tmp[k++] = a[j++];     // หรือจากกองขวา
+    }
+    while (i &lt;= mid)   tmp[k++] = a[i++];        // เทของที่เหลือกองซ้าย
+    while (j &lt;= right) tmp[k++] = a[j++];        // เทของที่เหลือกองขวา
+    for (int x = 0; x &lt; tmp.length; x++)         // ก๊อปกลับเข้า array เดิม
+        a[left + x] = tmp[x];
+}</pre></div>
+  <div class="play" data-seed="mergesort"></div>
+
+  <table>
+    <tr><th>วิธีเรียง</th><th>Big O</th><th>หมายเหตุ</th></tr>
+    <tr><td>เรียงแบบ loop ซ้อน loop (Bubble/Selection)</td><td>O(n²)</td><td>ช้าเมื่อ n เยอะ</td></tr>
+    <tr><td><b>Merge Sort</b></td><td><b>O(n log n)</b></td><td>เร็วกว่ามาก · เรียงเสถียร</td></tr>
+  </table>
+  <p class="hint">หมายเหตุ: นี่คือพรีวิวของ Part 2 (Searching & Sorting) ที่ยังไม่อยู่ในสไลด์ — ทำไว้ให้เข้าใจ n log n จากบท Big O</p>
 </section>
 
 <!-- ---------- SPACE ---------- -->
@@ -1385,7 +1479,23 @@ function knapsack(w,v,cap){
 }
 console.log("coin [1,2,5] amt 7 =", coinChange([1,2,5],7)); // 2
 console.log("coin [1,3,4] amt 6 =", coinChange([1,3,4],6)); // 2
-console.log("knapsack =", knapsack([1,3,4,5],[1,4,5,7],7)); // 9`}
+console.log("knapsack =", knapsack([1,3,4,5],[1,4,5,7],7)); // 9`},
+ mergesort:{title:'Merge Sort (รันได้)',code:
+`function mergeSort(a){
+  if (a.length <= 1) return a;            // base case: 1 ตัว เรียงเสร็จแล้ว
+  let mid = Math.floor(a.length/2);
+  let left  = mergeSort(a.slice(0,mid));  // แบ่งครึ่งซ้าย
+  let right = mergeSort(a.slice(mid));    // แบ่งครึ่งขวา
+  return merge(left, right);              // รวมแบบเรียง
+}
+function merge(L, R){
+  let out=[], i=0, j=0;
+  while (i<L.length && j<R.length)
+    out.push(L[i] <= R[j] ? L[i++] : R[j++]);  // หยิบตัวน้อยกว่า
+  return out.concat(L.slice(i)).concat(R.slice(j)); // เทที่เหลือ
+}
+console.log("ก่อน:", [5,2,8,1,9,3,7,4].join(" "));
+console.log("หลัง:", mergeSort([5,2,8,1,9,3,7,4]).join(" "));`}
 };
 document.querySelectorAll('.play[data-seed]').forEach(box=>{
   const s=seeds[box.dataset.seed];
@@ -1598,6 +1708,103 @@ buildAnim('anim-remove','ลบ node A (ตรงกลาง)',
    {vis:['rX','rB','rXB'],cap:'② ตอนนี้ไม่มีลูกศรไหนชี้ A แล้ว → A หลุดออกจากขบวน (Java จะเก็บทิ้งเองอัตโนมัติ = garbage collection)'},
    {vis:['rX','rB','rXB'],glow:['rB'],cap:'เสร็จ! ขบวนใหม่ = X → B ✅'}
   ]);
+
+/* --- Merge Sort animation --- */
+function buildMergeAnim(boxId){
+  const box=document.getElementById(boxId); if(!box)return;
+  const rows=[
+   {tag:'เริ่ม (8 ตัว)',sorted:false,segs:[[5,2,8,1,9,3,7,4]]},
+   {tag:'แบ่ง ชั้น 1',sorted:false,segs:[[5,2,8,1],[9,3,7,4]]},
+   {tag:'แบ่ง ชั้น 2',sorted:false,segs:[[5,2],[8,1],[9,3],[7,4]]},
+   {tag:'แบ่ง ชั้น 3',sorted:true,segs:[[5],[2],[8],[1],[9],[3],[7],[4]]},
+   {tag:'รวม → ทีละ 2',sorted:true,segs:[[2,5],[1,8],[3,9],[4,7]]},
+   {tag:'รวม → ทีละ 4',sorted:true,segs:[[1,2,5,8],[3,4,7,9]]},
+   {tag:'เรียงเสร็จ ✅',sorted:true,segs:[[1,2,3,4,5,7,8,9]]}
+  ];
+  const steps=[
+   {n:1,cap:'array ที่ยังไม่เรียง — เราจะ "แบ่งครึ่ง" ลงไปเรื่อยๆ'},
+   {n:2,cap:'แบ่งครึ่ง → ได้ 2 กอง (ชั้นที่ 1)'},
+   {n:3,cap:'แบ่งครึ่งอีก → 4 กอง (ชั้นที่ 2)'},
+   {n:4,cap:'แบ่งจนเหลือกองละ 1 ตัว (ชั้นที่ 3) · กองละ 1 ตัว = เรียงเสร็จอยู่แล้ว · แบ่งทั้งหมด 3 ชั้น = log₂8 ✨'},
+   {n:5,cap:'เริ่มรวมกลับ ⬆ จับ 2 กองมาเทียบหัวกอง หยิบตัวน้อยกว่าก่อน → ได้กองเรียงทีละ 2'},
+   {n:6,cap:'รวมต่อ → กองเรียงทีละ 4'},
+   {n:7,cap:'รวมครั้งสุดท้าย → เรียงครบทั้ง 8 ตัว! ✅'},
+   {n:7,hl:true,cap:'สรุป: แบ่ง log n = 3 ชั้น × แต่ละชั้นรวมต้องดูครบ n = 8 ตัว → รวม = n × log n = n log n 🎯'}
+  ];
+  box.innerHTML='<div class="ahead">🎬 Merge Sort: แบ่งครึ่ง → รวมกลับ</div>'+
+    '<div class="astage"><div class="msort" id="'+boxId+'-st"></div></div>'+
+    '<div class="acap"></div>'+
+    '<div class="actrl"><button class="btn sm sec">◀ ก่อนหน้า</button><button class="btn sm">ถัดไป ▶</button><button class="btn sm">▶ เล่นอัตโนมัติ</button><button class="btn sm sec">↺ เริ่มใหม่</button><span class="prog"></span></div>';
+  const stage=box.querySelector('#'+boxId+'-st'), cap=box.querySelector('.acap'), prog=box.querySelector('.prog'), P={i:0,timer:null};
+  function render(){
+    const s=steps[P.i]; let h='';
+    for(let r=0;r<s.n;r++){
+      const row=rows[r];
+      h+='<div class="msort-lv"><div class="lvtag">'+row.tag+'</div><div class="msort-rows">';
+      row.segs.forEach(seg=>{ h+='<div class="msort-seg">'+seg.map(v=>'<div class="msort-b'+(row.sorted?' sorted':'')+((s.hl&&r===s.n-1)?' flash':'')+'">'+v+'</div>').join('')+'</div>'; });
+      h+='</div></div>';
+    }
+    stage.innerHTML=h;
+    cap.innerHTML='<b>สเตป '+P.i+':</b> '+s.cap;
+    prog.textContent=P.i+' / '+(steps.length-1);
+  }
+  const b=box.querySelectorAll('.actrl button');
+  const stop=()=>{if(P.timer){clearInterval(P.timer);P.timer=null;}};
+  b[0].onclick=()=>{stop();if(P.i>0){P.i--;render();}};
+  b[1].onclick=()=>{stop();if(P.i<steps.length-1){P.i++;render();}};
+  b[3].onclick=()=>{stop();P.i=0;render();};
+  b[2].onclick=()=>{stop();P.i=0;render();P.timer=setInterval(()=>{if(P.i>=steps.length-1){stop();return;}P.i++;render();},1600);};
+  render();
+}
+buildMergeAnim('anim-merge');
+
+/* --- Big O "งานโตตาม n" race --- */
+function buildBigOAnim(boxId){
+  const box=document.getElementById(boxId); if(!box)return;
+  const NMAX=12, REF=NMAX*NMAX, BARMAX=420; // scale อ้างอิง n²ที่ n=12
+  const lg=n=>Math.max(1,Math.ceil(Math.log2(n)));
+  const fns=[
+    {lab:'O(1)',     c:'#13a85a', f:n=>1},
+    {lab:'O(log n)', c:'#2f74c0', f:n=>lg(n)},
+    {lab:'O(n)',     c:'#c98a00', f:n=>n},
+    {lab:'O(n log n)',c:'#7a4fc0',f:n=>n*lg(n)},
+    {lab:'O(n²)',    c:'#e8842b', f:n=>n*n},
+    {lab:'O(2ⁿ)',    c:'#d6453d', f:n=>Math.pow(2,n)}
+  ];
+  let rowsHtml=fns.map((x,i)=>'<div class="boa-row"><div class="boa-lbl" style="color:'+x.c+'">'+x.lab+'</div><div class="boa-track"><div class="boa-fill" id="'+boxId+'f'+i+'" style="background:'+x.c+'"></div></div><div class="boa-num" id="'+boxId+'n'+i+'"></div></div>').join('');
+  box.innerHTML='<div class="ahead">🎬 ยิ่ง n โต งานโตเร็วแค่ไหน</div>'+
+    '<div class="astage boa"><div class="boa-nbig" id="'+boxId+'-big"></div>'+rowsHtml+'</div>'+
+    '<div class="acap"></div>'+
+    '<div class="actrl"><button class="btn sm sec">◀ ลด n</button><button class="btn sm">เพิ่ม n ▶</button><button class="btn sm">▶ เล่นอัตโนมัติ</button><button class="btn sm sec">↺ เริ่มใหม่ (n=1)</button><span class="prog"></span></div>';
+  const cap=box.querySelector('.acap'), prog=box.querySelector('.prog'), big=box.querySelector('#'+boxId+'-big');
+  const P={n:1,timer:null};
+  function fmt(v){return v>=100000?v.toExponential(1):v.toLocaleString();}
+  function render(){
+    const n=P.n;
+    big.textContent='ข้อมูล n = '+n+' ชิ้น';
+    fns.forEach((x,i)=>{
+      const v=x.f(n);
+      let w=Math.min(BARMAX, v/REF*BARMAX); if(w<3)w=3;
+      const fill=box.querySelector('#'+boxId+'f'+i); fill.style.width=w+'px';
+      box.querySelector('#'+boxId+'n'+i).textContent='= '+fmt(v)+' ครั้ง'+(v>REF?' 💥':'');
+    });
+    let msg;
+    if(n<=2) msg='ตอน n น้อย ทุกแบบทำงานพอๆ กัน แทบไม่ต่าง';
+    else if(n<=5) msg='เริ่มเห็นความต่าง — O(n²) กับ O(2ⁿ) เริ่มแซง';
+    else if(n<=9) msg='O(2ⁿ) พุ่งทะลุ! ส่วน O(1) ยังเท่าเดิม = 1 ตลอด';
+    else msg='n='+n+': O(1)=1 แต่ O(2ⁿ)='+fmt(Math.pow(2,n))+' — ต่างกันมหาศาล! นี่คือเหตุผลที่ต้องเลือก algorithm ดีๆ';
+    cap.innerHTML='<b>n = '+n+':</b> '+msg;
+    prog.textContent='n = '+n+' / '+NMAX;
+  }
+  const b=box.querySelectorAll('.actrl button');
+  const stop=()=>{if(P.timer){clearInterval(P.timer);P.timer=null;}};
+  b[0].onclick=()=>{stop();if(P.n>1){P.n--;render();}};
+  b[1].onclick=()=>{stop();if(P.n<NMAX){P.n++;render();}};
+  b[3].onclick=()=>{stop();P.n=1;render();};
+  b[2].onclick=()=>{stop();P.n=1;render();P.timer=setInterval(()=>{if(P.n>=NMAX){stop();return;}P.n++;render();},1100);};
+  render();
+}
+buildBigOAnim('anim-bigo');
 
 /* ============ DARK MODE re-init for anim already built above ============ */
 
